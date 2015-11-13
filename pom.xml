@@ -45,6 +45,8 @@
         <junit.version>4.10</junit.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.jpa.version>1.8.0.RELEASE</spring.jpa.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
         <!-- Reporting -->
         <maven.cobertura.version>2.5.2</maven.cobertura.version>
         <maven.javadoc.version>2.8</maven.javadoc.version>
@@ -56,7 +58,7 @@
         <dependency>
             <groupId>io.beanmapper</groupId>
             <artifactId>beanmapper</artifactId>
-            <version>0.2.16-SNAPSHOT</version>
+            <version>0.2.17-SNAPSHOT</version>
         </dependency>
 
         <!-- Spring integration -->
@@ -66,7 +68,33 @@
             <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring.jpa.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-aop</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- Servlets -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
         <!-- Used for unit testing -->
         <dependency>
             <groupId>org.jmockit</groupId>

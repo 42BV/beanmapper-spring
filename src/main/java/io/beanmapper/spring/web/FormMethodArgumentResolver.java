@@ -19,6 +19,7 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.util.StringUtils;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -56,29 +57,30 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
         Long id = retrieveMergeId(webRequest, form.mergeId());
 
         if (id == null) {
-            // Create
             return beanMapper.map(formResult, parameter.getParameterType());
         } else {
-            // Fetch and merge
             CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(parameter.getParameterType());
             return beanMapper.map(formResult, repository.findOne(id));
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Long retrieveMergeId(NativeWebRequest webRequest, String mergeId) {
-        if (mergeId == null || mergeId.length() == 0) {
+        if (StringUtils.isEmpty(mergeId)) {
             return null;
         }
-        Map<String, String> uriTemplateVars =
-                (Map<String, String>) webRequest.getAttribute(
-                        HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        Map<String, String> uriTemplateVars = getUriTemplateVars(webRequest);
         return uriTemplateVars != null ? Long.valueOf(uriTemplateVars.get(mergeId)) : null;
     }
 
+    @SuppressWarnings("unchecked")
+    private Map<String, String> getUriTemplateVars(NativeWebRequest webRequest) {
+        Object attribute = webRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        return (Map<String, String>) attribute;
+    }
+
     @Override
-    protected <T> Object readWithMessageConverters(NativeWebRequest webRequest, MethodParameter methodParam,
-                                                  Type paramType) throws IOException, HttpMediaTypeNotSupportedException {
+    protected <T> Object readWithMessageConverters(NativeWebRequest webRequest, MethodParameter methodParam, Type paramType) throws IOException,
+            HttpMediaTypeNotSupportedException {
 
         HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         HttpInputMessage inputMessage = new ServletServerHttpRequest(servletRequest);
@@ -86,15 +88,13 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
         InputStream inputStream = inputMessage.getBody();
         if (inputStream == null) {
             return handleEmptyBody(methodParam);
-        }
-        else if (inputStream.markSupported()) {
+        } else if (inputStream.markSupported()) {
             inputStream.mark(1);
             if (inputStream.read() == -1) {
                 return handleEmptyBody(methodParam);
             }
             inputStream.reset();
-        }
-        else {
+        } else {
             final PushbackInputStream pushbackInputStream = new PushbackInputStream(inputStream);
             int b = pushbackInputStream.read();
             if (b == -1) {
@@ -102,16 +102,7 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
             } else {
                 pushbackInputStream.unread(b);
             }
-            
-            inputMessage = new ServletServerHttpRequest(servletRequest) {
-                
-                @Override
-                public InputStream getBody() {
-                    // Form POST should not get here
-                    return pushbackInputStream;
-                }
-                
-            };
+            inputMessage = new PushbackServletServerHttpRequest(servletRequest, pushbackInputStream);
         }
 
         return super.readWithMessageConverters(inputMessage, methodParam, paramType);
@@ -122,6 +113,25 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
             throw new HttpMessageNotReadableException("Required request body content is missing: " + param);
         }
         return null;
+    }
+    
+    private static class PushbackServletServerHttpRequest extends ServletServerHttpRequest {
+        
+        private final InputStream body;
+
+        public PushbackServletServerHttpRequest(HttpServletRequest servletRequest, InputStream body) {
+            super(servletRequest);
+            this.body = body;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public InputStream getBody() throws IOException {
+            return body;
+        }
+        
     }
 
 }
