@@ -1,8 +1,9 @@
 package io.beanmapper.spring.model;
 
-public class Person {
+import javax.persistence.Entity;
 
-    private Long id;
+@Entity
+public class Person extends BaseEntity {
 
     private String name;
 
@@ -13,14 +14,6 @@ public class Person {
     private String city;
 
     private String bankAccount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

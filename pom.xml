@@ -74,6 +74,8 @@
             <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- ORM -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -85,6 +87,12 @@
                     <groupId>org.springframework</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.3.8.Final</version>
+            <scope>provided</scope>
         </dependency>
         
         <!-- Servlets -->
@@ -109,6 +117,12 @@
         
         <!-- Used for unit testing -->
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jmockit</groupId>
             <artifactId>jmockit</artifactId>
             <version>1.17</version>
@@ -119,6 +133,12 @@
             <artifactId>junit-dep</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.2</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Logging -->
