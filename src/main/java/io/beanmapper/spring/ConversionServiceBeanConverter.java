@@ -15,7 +15,7 @@ import org.springframework.core.convert.ConversionService;
  * @author Jeroen van Schagen
  * @since Jun 18, 2015
  */
-public class SpringBeanConverter implements BeanConverter {
+public class ConversionServiceBeanConverter implements BeanConverter {
     
     /**
      * Performs type conversions in Spring.
@@ -23,10 +23,10 @@ public class SpringBeanConverter implements BeanConverter {
     private final ConversionService conversionService;
 
     /**
-     * Construct a new {@link SpringBeanConverter}.
+     * Construct a new {@link ConversionServiceBeanConverter}.
      * @param conversionService the converter delegate
      */
-    public SpringBeanConverter(ConversionService conversionService) {
+    public ConversionServiceBeanConverter(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 

@@ -3,7 +3,7 @@
  */
 package io.beanmapper.spring;
 
-import io.beanmapper.spring.SpringBeanConverter;
+import io.beanmapper.spring.ConversionServiceBeanConverter;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,16 +17,16 @@ import org.springframework.core.convert.support.DefaultConversionService;
  * @author Jeroen van Schagen
  * @since Jun 18, 2015
  */
-public class SpringBeanConverterTest {
+public class ConversionServiceBeanConverterTest {
     
     private ConversionService conversionService;
     
-    private SpringBeanConverter beanConverter;
+    private ConversionServiceBeanConverter beanConverter;
     
     @Before
     public void setUp() {
         conversionService = new DefaultConversionService();
-        beanConverter = new SpringBeanConverter(conversionService);
+        beanConverter = new ConversionServiceBeanConverter(conversionService);
     }
 
     @Test
