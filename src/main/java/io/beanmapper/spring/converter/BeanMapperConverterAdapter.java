@@ -1,4 +1,4 @@
-package io.beanmapper.spring;
+package io.beanmapper.spring.converter;
 
 import io.beanmapper.BeanMapper;
 

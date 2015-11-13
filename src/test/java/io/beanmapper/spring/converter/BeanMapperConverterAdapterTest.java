@@ -1,9 +1,10 @@
 /*
  * (C) 2014 42 bv (www.42.nl). All rights reserved.
  */
-package io.beanmapper.spring;
+package io.beanmapper.spring.converter;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.spring.converter.BeanMapperConverterAdapter;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonView;
 

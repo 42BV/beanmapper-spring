@@ -1,11 +1,11 @@
 /*
  * (C) 2014 42 bv (www.42.nl). All rights reserved.
  */
-package io.beanmapper.spring;
+package io.beanmapper.spring.converter;
 
-import io.beanmapper.BeanMapper;
 import io.beanmapper.core.BeanFieldMatch;
 import io.beanmapper.core.converter.BeanConverter;
+
 import org.springframework.core.convert.ConversionService;
 
 /**
@@ -44,10 +44,6 @@ public class ConversionServiceBeanConverter implements BeanConverter {
     @Override
     public boolean match(Class<?> sourceClass, Class<?> targetClass) {
         return conversionService.canConvert(sourceClass, targetClass);
-    }
-
-    @Override
-    public void setBeanMapper(BeanMapper beanMapper) {
     }
 
 }
