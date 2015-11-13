@@ -16,7 +16,7 @@ import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import javassist.bytecode.annotation.ClassMemberValue;
 
-public class DynBeanMapper {
+public class DynamicBeanMapper {
 
     private static Map<String, Map<String, GeneratedClass>> CACHE;
     private static Integer GENERATED_CLASS_PREFIX = 0;
@@ -29,7 +29,7 @@ public class DynBeanMapper {
         CACHE = new TreeMap<String, Map<String, GeneratedClass>>();
     }
 
-    public DynBeanMapper(BeanMapper beanMapper) {
+    public DynamicBeanMapper(BeanMapper beanMapper) {
         this.beanMapper = beanMapper;
         this.classPool = ClassPool.getDefault();
     }

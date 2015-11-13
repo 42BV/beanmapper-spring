@@ -5,12 +5,12 @@ import io.beanmapper.spring.model.ProductDto;
 
 public class AbstractDtoTest {
 
-    protected static DynBeanMapper dynBeanMapper;
+    protected DynamicBeanMapper dynamicBeanMapper;
 
-    static {
+    {
         BeanMapper beanMapper = new BeanMapper();
         beanMapper.addPackagePrefix(ProductDto.class);
-        dynBeanMapper = new DynBeanMapper(beanMapper);
+        dynamicBeanMapper = new DynamicBeanMapper(beanMapper);
     }
 
 }

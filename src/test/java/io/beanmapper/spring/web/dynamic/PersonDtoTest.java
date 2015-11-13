@@ -16,7 +16,6 @@ public class PersonDtoTest extends AbstractDtoTest {
     @Test
     public void mapToStatic() {
         Person person = createPerson();
-
         PersonDto personDto = new BeanMapper().map(person, PersonDto.class);
 
         assertEquals((Long)42L, personDto.id);
@@ -29,7 +28,7 @@ public class PersonDtoTest extends AbstractDtoTest {
     @Test
     public void mapToDynamic() throws Exception {
         Person person = createPerson();
-        Object dynPersonDto = dynBeanMapper.map(person, PersonDto.class, Arrays.asList("id", "name"));
+        Object dynPersonDto = dynamicBeanMapper.map(person, PersonDto.class, Arrays.asList("id", "name"));
 
         String json = new ObjectMapper().writeValueAsString(dynPersonDto);
         assertEquals("{\"id\":42,\"name\":\"Henk\"}", json);

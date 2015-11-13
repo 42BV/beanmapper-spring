@@ -21,7 +21,7 @@ public class ProductDtoTest extends AbstractDtoTest {
     @Test
     public void mapToDynamicProductDtoOrgOnlyIdName() throws Exception {
         Product product = createProduct(false);
-        Object productDto = dynBeanMapper.map(
+        Object productDto = dynamicBeanMapper.map(
                 product,
                 ProductDto.class,
                 Arrays.asList("id", "name", "organization.id", "organization.name"));
@@ -32,7 +32,7 @@ public class ProductDtoTest extends AbstractDtoTest {
     @Test
     public void mapToDynamicProductDtoWithLists() throws Exception {
         Product product = createProduct(true);
-        Object productDto = dynBeanMapper.map(
+        Object productDto = dynamicBeanMapper.map(
                 product,
                 ProductDto.class,
                 Arrays.asList("id", "name", "assets.id", "assets.name", "artists"));
@@ -54,7 +54,7 @@ public class ProductDtoTest extends AbstractDtoTest {
     @Test
     public void mapList() throws Exception {
         List<Artist> artists = createArtists();
-        Object dto = dynBeanMapper.map(artists, ArtistDto.class, Arrays.asList("id", "name"));
+        Object dto = dynamicBeanMapper.map(artists, ArtistDto.class, Arrays.asList("id", "name"));
         String json = new ObjectMapper().writeValueAsString(dto);
         assertEquals("[{\"id\":1141,\"name\":\"Artist 1\"},{\"id\":1142,\"name\":\"Artist 2\"}]", json);
     }
@@ -64,7 +64,7 @@ public class ProductDtoTest extends AbstractDtoTest {
         List<Product> products = new ArrayList<Product>();
         products.add(createProduct(42L, true));
         products.add(createProduct(43L, true));
-        Object dto = dynBeanMapper.map(products, ProductDto.class, Arrays.asList("id", "assets.id"));
+        Object dto = dynamicBeanMapper.map(products, ProductDto.class, Arrays.asList("id", "assets.id"));
         String json = new ObjectMapper().writeValueAsString(dto);
         assertEquals("" +
                 "[" +
