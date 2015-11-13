@@ -29,32 +29,37 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
-public class FormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
+public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
 
     private final BeanMapper beanMapper;
 
     private final Repositories repositories;
 
-    public FormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters, BeanMapper beanMapper,
-                                      ApplicationContext applicationContext) {
+    public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters, BeanMapper beanMapper, ApplicationContext applicationContext) {
         super(messageConverters);
         this.beanMapper = beanMapper;
         this.repositories = new Repositories(applicationContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Form.class);
+        return parameter.hasParameterAnnotation(MergedForm.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("unchecked")
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        Form form = parameter.getParameterAnnotation(Form.class);
-        Object formResult = readWithMessageConverters(webRequest, parameter, form.formClass());
-        Long id = retrieveMergeId(webRequest, form.mergeId());
+        MergedForm form = parameter.getParameterAnnotation(MergedForm.class);
+        Object formResult = readWithMessageConverters(webRequest, parameter, form.value());
+        Long id = retrieveId(webRequest, form.id());
 
         if (id == null) {
             return beanMapper.map(formResult, parameter.getParameterType());
@@ -64,7 +69,7 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
         }
     }
 
-    private Long retrieveMergeId(NativeWebRequest webRequest, String mergeId) {
+    private Long retrieveId(NativeWebRequest webRequest, String mergeId) {
         if (StringUtils.isEmpty(mergeId)) {
             return null;
         }
@@ -78,6 +83,9 @@ public class FormMethodArgumentResolver extends AbstractMessageConverterMethodAr
         return (Map<String, String>) attribute;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected <T> Object readWithMessageConverters(NativeWebRequest webRequest, MethodParameter methodParam, Type paramType) throws IOException,
             HttpMediaTypeNotSupportedException {

@@ -17,13 +17,13 @@ public class PersonController {
     
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Person create(@Form(formClass = PersonForm.class) Person person) {
+    public Person create(@MergedForm(PersonForm.class) Person person) {
         return person;
     }
     
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public Person update(@Form(formClass = PersonForm.class, mergeId = "id") Person person) {
+    public Person update(@MergedForm(value = PersonForm.class, id = "id") Person person) {
         return person;
     }
 

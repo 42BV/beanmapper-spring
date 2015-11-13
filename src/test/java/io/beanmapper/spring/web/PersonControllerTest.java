@@ -53,7 +53,7 @@ public class PersonControllerTest extends AbstractSpringTest {
         converters.add(converter);
         
         this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
-                .setCustomArgumentResolvers(new FormMethodArgumentResolver(converters, beanMapper, applicationContext))
+                .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(converters, beanMapper, applicationContext))
                 .setMessageConverters(converter)
                 .setConversionService(new FormattingConversionService())
                 .build();
