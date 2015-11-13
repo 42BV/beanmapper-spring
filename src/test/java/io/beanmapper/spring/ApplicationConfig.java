@@ -17,17 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,11 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Jeroen van Schagen
  * @since Aug 24, 2015
  */
-@ComponentScan(
-    basePackageClasses = ApplicationConfig.class,
-    excludeFilters = {
-        @Filter({ ControllerAdvice.class, Controller.class, RestController.class, Configuration.class })
-})
+@ComponentScan(basePackageClasses = ApplicationConfig.class)
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackageClasses = ApplicationConfig.class)
 @Configuration

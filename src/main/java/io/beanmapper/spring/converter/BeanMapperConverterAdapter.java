@@ -43,7 +43,6 @@ public class BeanMapperConverterAdapter implements GenericConverter {
      */
     @Override
     public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        // Skip converting between the same types
         if (sourceType.getType().equals(targetType.getType())) {
             return source;
         }
