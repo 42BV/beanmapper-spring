@@ -14,6 +14,6 @@ public @interface MergedForm {
     
     Class<?> value();
     
-    String id() default "";
+    String mergeId() default "";
 
 }

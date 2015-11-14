@@ -1,10 +1,12 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.spring.Lazy;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -53,23 +55,24 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         MergedForm form = parameter.getParameterAnnotation(MergedForm.class);
-        Object formResult = readWithMessageConverters(webRequest, parameter, form.value());
-        Long id = retrieveId(webRequest, form.id());
+        Object input = readWithMessageConverters(webRequest, parameter, form.value());
+        Long id = resolveId(webRequest, form.mergeId());
 
-        if (id == null) {
-            return beanMapper.map(formResult, parameter.getParameterType());
+        Class<?> parameterType = parameter.getParameterType();
+        if (Lazy.class.isAssignableFrom(parameterType)) {
+            ParameterizedType a = (ParameterizedType) parameter.getGenericParameterType();
+            String typeName = a.getActualTypeArguments()[0].getTypeName();
+            return new LazyResolveEntity(input, id, Class.forName(typeName));
         } else {
-            CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(parameter.getParameterType());
-            return beanMapper.map(formResult, repository.findOne(id));
+            return resolveEntity(input, id, parameterType);
         }
     }
 
-    private Long retrieveId(NativeWebRequest webRequest, String mergeId) {
+    private Long resolveId(NativeWebRequest webRequest, String mergeId) {
         if (StringUtils.isEmpty(mergeId)) {
             return null;
         }
@@ -79,8 +82,17 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     @SuppressWarnings("unchecked")
     private Map<String, String> getUriTemplateVars(NativeWebRequest webRequest) {
-        Object attribute = webRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-        return (Map<String, String>) attribute;
+        return (Map<String, String>) webRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Object resolveEntity(Object input, Long id, Class<?> entityClass) {
+        if (id == null) {
+            return beanMapper.map(input, entityClass);
+        } else {
+            CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass);
+            return beanMapper.map(input, repository.findOne(id));
+        }
     }
 
     /**
@@ -138,6 +150,30 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         @Override
         public InputStream getBody() throws IOException {
             return body;
+        }
+        
+    }
+
+    private class LazyResolveEntity implements Lazy<Object> {
+        
+        private final Object input;
+        
+        private final Long id;
+        
+        private final Class<?> entityClass;
+        
+        public LazyResolveEntity(Object input, Long id, Class<?> entityClass) {
+            this.input = input;
+            this.id = id;
+            this.entityClass = entityClass;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Object get() {
+            return resolveEntity(input, id, entityClass);
         }
         
     }

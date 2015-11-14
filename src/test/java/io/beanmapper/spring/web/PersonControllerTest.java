@@ -83,5 +83,20 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
     }
+    
+    @Test
+    public void testLazy() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        personRepository.save(person);
+        
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/lazy")
+                .content("{\"name\":\"Jan\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
+    }
 
 }
