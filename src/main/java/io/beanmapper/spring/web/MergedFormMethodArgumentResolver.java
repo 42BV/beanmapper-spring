@@ -1,29 +1,27 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.core.rule.MappableFields;
 import io.beanmapper.spring.Lazy;
+import io.beanmapper.spring.util.JsonUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
+import java.io.StringWriter;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.StringUtils;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
@@ -31,16 +29,27 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
+
+    private final ObjectMapper objectMapper;
 
     private final BeanMapper beanMapper;
 
     private final Repositories repositories;
 
-    public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters, BeanMapper beanMapper, ApplicationContext applicationContext) {
-        super(messageConverters);
+    public MergedFormMethodArgumentResolver(ObjectMapper objectMapper, BeanMapper beanMapper, ApplicationContext applicationContext) {
+        super(Arrays.<HttpMessageConverter<?>> asList(buildJacksonMessageConverter(objectMapper)));
+        this.objectMapper = objectMapper;
         this.beanMapper = beanMapper;
         this.repositories = new Repositories(applicationContext);
+    }
+    
+    private static HttpMessageConverter<?> buildJacksonMessageConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(objectMapper);
+        return converter;
     }
 
     /**
@@ -58,24 +67,32 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        MergedForm form = parameter.getParameterAnnotation(MergedForm.class);
-        Object input = readWithMessageConverters(webRequest, parameter, form.value());
-        Long id = resolveId(webRequest, form.mergeId());
-
+        MergedForm annotation = parameter.getParameterAnnotation(MergedForm.class);
         Class<?> parameterType = parameter.getParameterType();
+        Long id = resolveId(webRequest, annotation.mergeId());
+        String json = readBodyAsJson(webRequest);
+
         if (Lazy.class.isAssignableFrom(parameterType)) {
-            ParameterizedType a = (ParameterizedType) parameter.getGenericParameterType();
-            String typeName = a.getActualTypeArguments()[0].getTypeName();
-            return new LazyResolveEntity(input, id, Class.forName(typeName));
+            ParameterizedType genericType = (ParameterizedType) parameter.getGenericParameterType();
+            String typeName = genericType.getActualTypeArguments()[0].getTypeName();
+            return new LazyResolveEntity(json, id, Class.forName(typeName), annotation);
         } else {
-            return resolveEntity(input, id, parameterType);
+            return resolveEntity(json, id, parameterType, annotation);
         }
+    }
+
+    private String readBodyAsJson(NativeWebRequest webRequest) throws IOException {
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(request.getReader(), writer);
+        return writer.toString();
     }
 
     private Long resolveId(NativeWebRequest webRequest, String mergeId) {
         if (StringUtils.isEmpty(mergeId)) {
             return null;
         }
+
         Map<String, String> uriTemplateVars = getUriTemplateVars(webRequest);
         return uriTemplateVars != null ? Long.valueOf(uriTemplateVars.get(mergeId)) : null;
     }
@@ -86,86 +103,36 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     }
     
     @SuppressWarnings("unchecked")
-    private Object resolveEntity(Object input, Long id, Class<?> entityClass) {
+    private Object resolveEntity(String json, Long id, Class<?> entityClass, MergedForm annotation) throws Exception {
+        Object input = objectMapper.readValue(json, annotation.value());
         if (id == null) {
             return beanMapper.map(input, entityClass);
         } else {
-            CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass);
-            return beanMapper.map(input, repository.findOne(id));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected <T> Object readWithMessageConverters(NativeWebRequest webRequest, MethodParameter methodParam, Type paramType) throws IOException,
-            HttpMediaTypeNotSupportedException {
-
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        HttpInputMessage inputMessage = new ServletServerHttpRequest(servletRequest);
-
-        InputStream inputStream = inputMessage.getBody();
-        if (inputStream == null) {
-            return handleEmptyBody(methodParam);
-        } else if (inputStream.markSupported()) {
-            inputStream.mark(1);
-            if (inputStream.read() == -1) {
-                return handleEmptyBody(methodParam);
-            }
-            inputStream.reset();
-        } else {
-            final PushbackInputStream pushbackInputStream = new PushbackInputStream(inputStream);
-            int b = pushbackInputStream.read();
-            if (b == -1) {
-                return handleEmptyBody(methodParam);
+            Object entity = ((CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass)).findOne(id);
+            if (annotation.patch()) {
+                Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, objectMapper);
+                return beanMapper.map(input, entity, new MappableFields(propertyNames));
             } else {
-                pushbackInputStream.unread(b);
+                return beanMapper.map(input, entity);
             }
-            inputMessage = new PushbackServletServerHttpRequest(servletRequest, pushbackInputStream);
         }
-
-        return super.readWithMessageConverters(inputMessage, methodParam, paramType);
-    }
-
-    private Object handleEmptyBody(MethodParameter param) {
-        if (param.getParameterAnnotation(RequestBody.class).required()) {
-            throw new HttpMessageNotReadableException("Required request body content is missing: " + param);
-        }
-        return null;
-    }
-    
-    private static class PushbackServletServerHttpRequest extends ServletServerHttpRequest {
-        
-        private final InputStream body;
-
-        public PushbackServletServerHttpRequest(HttpServletRequest servletRequest, InputStream body) {
-            super(servletRequest);
-            this.body = body;
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public InputStream getBody() throws IOException {
-            return body;
-        }
-        
     }
 
     private class LazyResolveEntity implements Lazy<Object> {
         
-        private final Object input;
+        private final String json;
         
         private final Long id;
         
         private final Class<?> entityClass;
         
-        public LazyResolveEntity(Object input, Long id, Class<?> entityClass) {
-            this.input = input;
+        private final MergedForm annotation;
+        
+        public LazyResolveEntity(String json, Long id, Class<?> entityClass, MergedForm annotation) {
+            this.json = json;
             this.id = id;
             this.entityClass = entityClass;
+            this.annotation = annotation;
         }
         
         /**
@@ -173,7 +140,11 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
          */
         @Override
         public Object get() {
-            return resolveEntity(input, id, entityClass);
+            try {
+                return resolveEntity(json, id, entityClass, annotation);
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not map entity from request body.", e);
+            }
         }
         
     }

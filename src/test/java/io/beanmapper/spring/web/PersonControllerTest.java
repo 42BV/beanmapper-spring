@@ -53,7 +53,7 @@ public class PersonControllerTest extends AbstractSpringTest {
         converters.add(converter);
         
         this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
-                .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(converters, beanMapper, applicationContext))
+                .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(objectMapper, beanMapper, applicationContext))
                 .setMessageConverters(converter)
                 .setConversionService(new FormattingConversionService())
                 .build();
@@ -73,6 +73,7 @@ public class PersonControllerTest extends AbstractSpringTest {
     public void testUpdate() throws Exception {
         Person person = new Person();
         person.setName("Henk");
+        person.setCity("Lisse");
         personRepository.save(person);
         
         this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId())
@@ -81,7 +82,25 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
+    }
+    
+    @Test
+    public void testUpdateNoPatch() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Lisse");
+        personRepository.save(person);
+        
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/no-patch")
+                .content("{\"name\":\"Jan\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.city").doesNotExist());
     }
     
     @Test

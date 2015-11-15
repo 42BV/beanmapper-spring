@@ -27,10 +27,16 @@ public class PersonController {
     public Person update(@MergedForm(value = PersonForm.class, mergeId = "id") Person person) {
         return person;
     }
+    
+    @RequestMapping(value = "/{id}/no-patch", method = RequestMethod.PUT)
+    @ResponseBody
+    public Person updatePatch(@MergedForm(value = PersonForm.class, patch = false, mergeId = "id") Person person) {
+        return person;
+    }
 
     @RequestMapping(value = "/{id}/lazy", method = RequestMethod.PUT)
     @ResponseBody
-    public Person update(@MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) {
+    public Person updateLazy(@MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) {
         return person.get();
     }
 
