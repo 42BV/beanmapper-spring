@@ -6,7 +6,6 @@ import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.util.JsonUtil;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.repository.CrudRepository;
@@ -30,6 +28,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.CharStreams;
 
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
 
@@ -83,9 +82,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     private String readBodyAsJson(NativeWebRequest webRequest) throws IOException {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(request.getReader(), writer);
-        return writer.toString();
+        return CharStreams.toString(request.getReader());
     }
 
     private Long resolveId(NativeWebRequest webRequest, String mergeId) {
