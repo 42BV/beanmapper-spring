@@ -7,6 +7,7 @@ import io.beanmapper.spring.util.JsonUtil;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -73,8 +74,8 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
         if (Lazy.class.isAssignableFrom(parameterType)) {
             ParameterizedType genericType = (ParameterizedType) parameter.getGenericParameterType();
-            String typeName = genericType.getActualTypeArguments()[0].getTypeName();
-            return new LazyResolveEntity(json, id, Class.forName(typeName), annotation);
+            Type entityType = genericType.getActualTypeArguments()[0];
+            return new LazyResolveEntity(json, id, (Class<?>) entityType, annotation);
         } else {
             return resolveEntity(json, id, parameterType, annotation);
         }

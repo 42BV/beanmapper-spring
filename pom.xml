@@ -62,7 +62,7 @@
         <dependency>
             <groupId>io.beanmapper</groupId>
             <artifactId>beanmapper</artifactId>
-            <version>0.2.17-SNAPSHOT</version>
+            <version>0.2.17</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
