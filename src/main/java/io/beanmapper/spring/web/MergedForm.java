@@ -30,7 +30,8 @@ public @interface MergedForm {
      * from our input form to the entity.
      * @return the patch
      */
-    boolean patch() default false;
+    // @TODO patching temporarily disabled. Not used for current business case of customer
+//    boolean patch() default false;
     
     /**
      * Entity identifier variable in our path mapping.

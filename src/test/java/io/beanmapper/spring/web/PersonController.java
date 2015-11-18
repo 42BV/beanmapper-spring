@@ -34,11 +34,11 @@ public class PersonController {
         return person;
     }
 
-    @RequestMapping(value = "/{id}/patch", method = RequestMethod.PUT)
-    @ResponseBody
-    public Person updatePatch(@MergedForm(value = PersonForm.class, patch = true, mergeId = "id") Person person) {
-        return person;
-    }
+//    @RequestMapping(value = "/{id}/patch", method = RequestMethod.PUT)
+//    @ResponseBody
+//    public Person updatePatch(@MergedForm(value = PersonForm.class, patch = true, mergeId = "id") Person person) {
+//        return person;
+//    }
 
     @RequestMapping(value = "/{id}/lazy", method = RequestMethod.PUT)
     @ResponseBody

@@ -71,23 +71,24 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Henk"));
     }
-    
-    @Test
-    public void testUpdatePatch() throws Exception {
-        Person person = new Person();
-        person.setName("Henk");
-        person.setCity("Lisse");
-        personRepository.save(person);
-        
-        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/patch")
-                .content("{\"name\":\"Jan\"}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
-    }
+
+    // @TODO patching temporarily disabled. Not used for current business case of customer
+//    @Test
+//    public void testUpdatePatch() throws Exception {
+//        Person person = new Person();
+//        person.setName("Henk");
+//        person.setCity("Lisse");
+//        personRepository.save(person);
+//
+//        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/patch")
+//                .content("{\"name\":\"Jan\"}")
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
+//    }
     
     @Test
     public void testUpdateNoPatch() throws Exception {
