@@ -5,21 +5,17 @@ import io.beanmapper.core.rule.MappableFields;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.util.JsonUtil;
 
-import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -28,28 +24,17 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.CharStreams;
-
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
-
-    private final ObjectMapper objectMapper;
 
     private final BeanMapper beanMapper;
 
     private final Repositories repositories;
 
-    public MergedFormMethodArgumentResolver(ObjectMapper objectMapper, BeanMapper beanMapper, ApplicationContext applicationContext) {
-        super(Arrays.<HttpMessageConverter<?>> asList(buildJacksonMessageConverter(objectMapper)));
-        this.objectMapper = objectMapper;
+    public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
+                                            BeanMapper beanMapper, ApplicationContext applicationContext) {
+        super(messageConverters);
         this.beanMapper = beanMapper;
         this.repositories = new Repositories(applicationContext);
-    }
-    
-    private static HttpMessageConverter<?> buildJacksonMessageConverter(ObjectMapper objectMapper) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(objectMapper);
-        return converter;
     }
 
     /**
@@ -70,20 +55,15 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         MergedForm annotation = parameter.getParameterAnnotation(MergedForm.class);
         Class<?> parameterType = parameter.getParameterType();
         Long id = resolveId(webRequest, annotation.mergeId());
-        String json = readBodyAsJson(webRequest);
+        Object form = readWithMessageConverters(webRequest, parameter, annotation.value());
 
         if (Lazy.class.isAssignableFrom(parameterType)) {
             ParameterizedType genericType = (ParameterizedType) parameter.getGenericParameterType();
             Type entityType = genericType.getActualTypeArguments()[0];
-            return new LazyResolveEntity(json, id, (Class<?>) entityType, annotation);
+            return new LazyResolveEntity(form, id, (Class<?>) entityType, annotation);
         } else {
-            return resolveEntity(json, id, parameterType, annotation);
+            return resolveEntity(form, id, parameterType, annotation);
         }
-    }
-
-    private String readBodyAsJson(NativeWebRequest webRequest) throws IOException {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return CharStreams.toString(request.getReader());
     }
 
     private Long resolveId(NativeWebRequest webRequest, String mergeId) {
@@ -101,33 +81,33 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     }
     
     @SuppressWarnings("unchecked")
-    private Object resolveEntity(String json, Long id, Class<?> entityClass, MergedForm annotation) throws Exception {
-        Object input = objectMapper.readValue(json, annotation.value());
+    private Object resolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) throws Exception {
+
         if (id == null) {
-            return beanMapper.map(input, entityClass);
+            return beanMapper.map(form, entityClass);
         } else {
             Object entity = ((CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass)).findOne(id);
             if (annotation.patch()) {
-                Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, objectMapper);
-                return beanMapper.map(input, entity, new MappableFields(propertyNames));
+                Set<String> propertyNames = JsonUtil.getPropertyNamesFromBody(form);
+                return beanMapper.map(form, entity, new MappableFields(propertyNames));
             } else {
-                return beanMapper.map(input, entity);
+                return beanMapper.map(form, entity);
             }
         }
     }
 
     private class LazyResolveEntity implements Lazy<Object> {
-        
-        private final String json;
-        
+
+        private final Object form;
+
         private final Long id;
         
         private final Class<?> entityClass;
         
         private final MergedForm annotation;
         
-        public LazyResolveEntity(String json, Long id, Class<?> entityClass, MergedForm annotation) {
-            this.json = json;
+        public LazyResolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) {
+            this.form = form;
             this.id = id;
             this.entityClass = entityClass;
             this.annotation = annotation;
@@ -139,7 +119,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         @Override
         public Object get() {
             try {
-                return resolveEntity(json, id, entityClass, annotation);
+                return resolveEntity(form, id, entityClass, annotation);
             } catch (Exception e) {
                 throw new IllegalStateException("Could not map entity from request body.", e);
             }

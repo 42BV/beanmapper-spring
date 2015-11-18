@@ -53,7 +53,10 @@ public class PersonControllerTest extends AbstractSpringTest {
         converters.add(converter);
         
         this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
-                .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(objectMapper, beanMapper, applicationContext))
+                .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
+                        converters,
+                        beanMapper,
+                        applicationContext))
                 .setMessageConverters(converter)
                 .setConversionService(new FormattingConversionService())
                 .build();
@@ -70,13 +73,13 @@ public class PersonControllerTest extends AbstractSpringTest {
     }
     
     @Test
-    public void testUpdate() throws Exception {
+    public void testUpdatePatch() throws Exception {
         Person person = new Person();
         person.setName("Henk");
         person.setCity("Lisse");
         personRepository.save(person);
         
-        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId())
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/patch")
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())

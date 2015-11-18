@@ -30,7 +30,7 @@ public @interface MergedForm {
      * from our input form to the entity.
      * @return the patch
      */
-    boolean patch() default true;
+    boolean patch() default false;
     
     /**
      * Entity identifier variable in our path mapping.

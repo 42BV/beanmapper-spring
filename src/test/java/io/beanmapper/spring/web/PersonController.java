@@ -22,15 +22,15 @@ public class PersonController {
         return person;
     }
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/no-patch", method = RequestMethod.PUT)
     @ResponseBody
-    public Person update(@MergedForm(value = PersonForm.class, mergeId = "id") Person person) {
+    public Person updateNoPatch(@MergedForm(value = PersonForm.class, mergeId = "id") Person person) {
         return person;
     }
     
-    @RequestMapping(value = "/{id}/no-patch", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/patch", method = RequestMethod.PUT)
     @ResponseBody
-    public Person updatePatch(@MergedForm(value = PersonForm.class, patch = false, mergeId = "id") Person person) {
+    public Person updatePatch(@MergedForm(value = PersonForm.class, patch = true, mergeId = "id") Person person) {
         return person;
     }
 

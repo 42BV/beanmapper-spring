@@ -3,8 +3,6 @@
  */
 package io.beanmapper.spring.converter;
 
-import io.beanmapper.spring.converter.ConversionServiceBeanConverter;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
