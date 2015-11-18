@@ -71,8 +71,16 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             return null;
         }
 
+        // First check the URI variables (ie, comparable to @PathVariable)
         Map<String, String> uriTemplateVars = getUriTemplateVars(webRequest);
-        return uriTemplateVars != null ? Long.valueOf(uriTemplateVars.get(mergeId)) : null;
+        String mergeIdValue = uriTemplateVars != null ? uriTemplateVars.get(mergeId) : null;
+
+        // If the mergeIdValue was not found, check the query parameters
+        if (mergeIdValue == null) {
+            mergeIdValue = webRequest.getParameter(mergeId);
+        }
+
+        return mergeIdValue != null ? Long.valueOf(mergeIdValue) : null;
     }
 
     @SuppressWarnings("unchecked")

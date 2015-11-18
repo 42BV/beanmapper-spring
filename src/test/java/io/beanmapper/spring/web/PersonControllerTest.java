@@ -107,6 +107,24 @@ public class PersonControllerTest extends AbstractSpringTest {
     }
     
     @Test
+    public void testUpdateNoPatchMergeIdAsRequestParam() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Lisse");
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/query-param")
+                .param("id", person.getId().toString())
+                .content("{\"name\":\"Jan\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.city").doesNotExist());
+    }
+
+    @Test
     public void testLazy() throws Exception {
         Person person = new Person();
         person.setName("Henk");

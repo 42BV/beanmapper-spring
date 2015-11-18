@@ -22,12 +22,18 @@ public class PersonController {
         return person;
     }
     
+    @RequestMapping(value = "/query-param", method = RequestMethod.PUT)
+    @ResponseBody
+    public Person updateMergeIdInQueryParam(@MergedForm(value = PersonForm.class, mergeId = "id") Person person) {
+        return person;
+    }
+    
     @RequestMapping(value = "/{id}/no-patch", method = RequestMethod.PUT)
     @ResponseBody
     public Person updateNoPatch(@MergedForm(value = PersonForm.class, mergeId = "id") Person person) {
         return person;
     }
-    
+
     @RequestMapping(value = "/{id}/patch", method = RequestMethod.PUT)
     @ResponseBody
     public Person updatePatch(@MergedForm(value = PersonForm.class, patch = true, mergeId = "id") Person person) {
