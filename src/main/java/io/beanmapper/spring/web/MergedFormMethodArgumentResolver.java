@@ -1,9 +1,13 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
-import io.beanmapper.core.rule.MappableFields;
 import io.beanmapper.spring.Lazy;
-import io.beanmapper.spring.util.JsonUtil;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,12 +18,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
 
