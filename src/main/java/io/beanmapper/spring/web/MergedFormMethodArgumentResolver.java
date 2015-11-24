@@ -94,7 +94,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         if (id == null) {
             return beanMapper.map(form, entityClass);
         } else {
-            Object entity = entityFinder.getOne(entityClass, id);
+            Object entity = entityFinder.find(id, entityClass);
             // @TODO patching temporarily disabled. Not used for current business case of customer
 //            if (annotation.patch()) {
 //                Set<String> propertyNames = JsonUtil.getPropertyNamesFromBody(form);

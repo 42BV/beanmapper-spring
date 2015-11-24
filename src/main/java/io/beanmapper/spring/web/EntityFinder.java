@@ -17,6 +17,6 @@ public interface EntityFinder {
      * @throws javax.persistence.EntityNotFoundException if the repository or the entity
      *         could not be found
      */
-    Object getOne(Class<?> entityClass, Long id) throws EntityNotFoundException;
+    Object find(Long id, Class entityClass) throws EntityNotFoundException;
 
 }

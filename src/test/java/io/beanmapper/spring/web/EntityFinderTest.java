@@ -1,15 +1,15 @@
 package io.beanmapper.spring.web;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityNotFoundException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EntityFinderTest extends AbstractSpringTest {
 
@@ -25,11 +25,11 @@ public class EntityFinderTest extends AbstractSpringTest {
 
         EntityFinder entityFinder = new EntityFinder() {
             @Override
-            public Object getOne(Class entityClass, Long id) throws EntityNotFoundException {
+            public Object find(Long id, Class entityClass) throws EntityNotFoundException {
                 return personRepository.findOne(id);
             }
         };
-        Person foundPerson = (Person)entityFinder.getOne(Person.class, person.getId());
+        Person foundPerson = (Person) entityFinder.find(person.getId(), Person.class);
         assertNotNull(foundPerson);
         assertEquals("Henk", foundPerson.getName());
     }

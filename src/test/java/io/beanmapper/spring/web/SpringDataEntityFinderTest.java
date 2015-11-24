@@ -1,17 +1,17 @@
 package io.beanmapper.spring.web;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import javax.persistence.EntityNotFoundException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 public class SpringDataEntityFinderTest extends AbstractSpringTest {
 
@@ -29,7 +29,7 @@ public class SpringDataEntityFinderTest extends AbstractSpringTest {
         person = personRepository.save(person);
 
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        Person foundPerson = (Person)entityFinder.getOne(Person.class, person.getId());
+        Person foundPerson = (Person) entityFinder.find(person.getId(), Person.class);
         assertNotNull(foundPerson);
         assertEquals("Henk", foundPerson.getName());
     }
@@ -37,13 +37,13 @@ public class SpringDataEntityFinderTest extends AbstractSpringTest {
     @Test(expected = EntityNotFoundException.class)
     public void noRepository() {
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        entityFinder.getOne(BeanMapper.class, 42L);
+        entityFinder.find(42L, BeanMapper.class);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void entityNotFound() {
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        entityFinder.getOne(Person.class, 42L);
+        entityFinder.find(42L, Person.class);
     }
 
 }
