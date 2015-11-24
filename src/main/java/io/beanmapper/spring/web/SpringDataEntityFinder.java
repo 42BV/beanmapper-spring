@@ -1,10 +1,10 @@
 package io.beanmapper.spring.web;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.support.Repositories;
-
-import javax.persistence.EntityNotFoundException;
 
 /**
  * The default implementation is based on the Repositories class of Spring Data. It
@@ -20,7 +20,7 @@ public class SpringDataEntityFinder implements EntityFinder {
     }
 
     @Override
-    public Object find(Long id, Class entityClass) throws EntityNotFoundException {
+    public Object getOne(Class<?> entityClass, Long id) throws EntityNotFoundException {
         CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass);
         if (repository == null) {
             throw new EntityNotFoundException(

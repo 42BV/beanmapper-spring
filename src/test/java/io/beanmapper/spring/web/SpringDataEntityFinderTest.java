@@ -29,7 +29,7 @@ public class SpringDataEntityFinderTest extends AbstractSpringTest {
         person = personRepository.save(person);
 
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        Person foundPerson = (Person)entityFinder.find(person.getId(), Person.class);
+        Person foundPerson = (Person)entityFinder.getOne(Person.class, person.getId());
         assertNotNull(foundPerson);
         assertEquals("Henk", foundPerson.getName());
     }
@@ -37,13 +37,13 @@ public class SpringDataEntityFinderTest extends AbstractSpringTest {
     @Test(expected = EntityNotFoundException.class)
     public void noRepository() {
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        entityFinder.find(42L, BeanMapper.class);
+        entityFinder.getOne(BeanMapper.class, 42L);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void entityNotFound() {
         EntityFinder entityFinder = new SpringDataEntityFinder(applicationContext);
-        entityFinder.find(42L, Person.class);
+        entityFinder.getOne(Person.class, 42L);
     }
 
 }
