@@ -1,12 +1,15 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.core.rule.MappableFields;
 import io.beanmapper.spring.Lazy;
+import io.beanmapper.spring.web.converter.StructuredBody;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
@@ -26,12 +29,14 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     private final EntityFinder entityFinder;
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
-                                            BeanMapper beanMapper, ApplicationContext applicationContext) {
+                                            BeanMapper beanMapper, 
+                                            ApplicationContext applicationContext) {
         this(messageConverters, beanMapper, new SpringDataEntityFinder(applicationContext));
     }
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
-                                            BeanMapper beanMapper, EntityFinder entityFinder) {
+                                            BeanMapper beanMapper, 
+                                            EntityFinder entityFinder) {
         super(messageConverters);
         this.beanMapper = beanMapper;
         this.entityFinder = entityFinder;
@@ -88,21 +93,25 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         return (Map<String, String>) webRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
     }
     
-    @SuppressWarnings("unchecked")
-    private Object resolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) throws Exception {
+    private Object resolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) {
+        Object data = form;
+        Set<String> propertyNames = null;
+        if (form instanceof StructuredBody) {
+            propertyNames = ((StructuredBody) form).getPropertyNames();
+            data = ((StructuredBody) form).getBody();
+        }
 
         if (id == null) {
-            return beanMapper.map(form, entityClass);
+            // Create a new entity using our form data
+            return beanMapper.map(data, entityClass);
         } else {
+            // Map our input form on the already persisted entity
             Object entity = entityFinder.find(id, entityClass);
-            // @TODO patching temporarily disabled. Not used for current business case of customer
-//            if (annotation.patch()) {
-//                Set<String> propertyNames = JsonUtil.getPropertyNamesFromBody(form);
-//                return beanMapper.map(form, entity, new MappableFields(propertyNames));
-//            } else {
-//                return beanMapper.map(form, entity);
-//            }
-            return beanMapper.map(form, entity);
+            if (annotation.patch() && propertyNames != null) {
+                return beanMapper.map(data, entity, new MappableFields(propertyNames));
+            } else {
+                return beanMapper.map(data, entity);
+            }
         }
     }
 
@@ -128,11 +137,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
          */
         @Override
         public Object get() {
-            try {
-                return resolveEntity(form, id, entityClass, annotation);
-            } catch (Exception e) {
-                throw new IllegalStateException("Could not map entity from request body.", e);
-            }
+            return resolveEntity(form, id, entityClass, annotation);
         }
         
     }

@@ -24,11 +24,14 @@ public class EntityFinderTest extends AbstractSpringTest {
         person = personRepository.save(person);
 
         EntityFinder entityFinder = new EntityFinder() {
+
             @Override
-            public Object find(Long id, Class entityClass) throws EntityNotFoundException {
+            public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
                 return personRepository.findOne(id);
             }
+
         };
+
         Person foundPerson = (Person) entityFinder.find(person.getId(), Person.class);
         assertNotNull(foundPerson);
         assertEquals("Henk", foundPerson.getName());

@@ -8,9 +8,9 @@ import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
+import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,13 +48,10 @@ public class PersonControllerTest extends AbstractSpringTest {
         
         BeanMapper beanMapper = new BeanMapper();
         beanMapper.addPackagePrefix(ApplicationConfig.class);
-        
-        List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
-        converters.add(converter);
-        
+
         this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
-                        converters,
+                        Arrays.<HttpMessageConverter<?>> asList(new StructuredJsonMessageConverter(converter)),
                         beanMapper,
                         applicationContext))
                 .setMessageConverters(converter)
@@ -72,23 +69,22 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Henk"));
     }
 
-    // @TODO patching temporarily disabled. Not used for current business case of customer
-//    @Test
-//    public void testUpdatePatch() throws Exception {
-//        Person person = new Person();
-//        person.setName("Henk");
-//        person.setCity("Lisse");
-//        personRepository.save(person);
-//
-//        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/patch")
-//                .content("{\"name\":\"Jan\"}")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(MockMvcResultHandlers.print())
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
-//    }
+    @Test
+    public void testUpdatePatch() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Lisse");
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/patch")
+                .content("{\"name\":\"Jan\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
+    }
     
     @Test
     public void testUpdateNoPatch() throws Exception {

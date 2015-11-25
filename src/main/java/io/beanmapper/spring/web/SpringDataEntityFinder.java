@@ -19,8 +19,12 @@ public class SpringDataEntityFinder implements EntityFinder {
         this.repositories = new Repositories(applicationContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Object find(Long id, Class entityClass) throws EntityNotFoundException {
+    @SuppressWarnings("unchecked")
+    public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
         CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass);
         if (repository == null) {
             throw new EntityNotFoundException(
