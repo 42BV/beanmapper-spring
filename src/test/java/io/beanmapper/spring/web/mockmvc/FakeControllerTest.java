@@ -43,7 +43,7 @@ public class FakeControllerTest extends AbstractControllerTest {
 
         new Expectations(){{
             fakeService.read((Fake)any);
-            result = returnWhatWasPassed();
+            result = new ReturnPassedArgument<Fake>();
         }};
 
         this.webClient.perform(MockMvcRequestBuilders.get("/fake/42")
@@ -58,7 +58,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     public void create() throws Exception {
         new Expectations(){{
             fakeService.create((Fake)any);
-            result = returnWhatWasPassed();
+            result = new ReturnPassedArgument<Fake>(42L);
         }};
 
         FakeForm fakeForm = new FakeForm();
@@ -77,7 +77,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     public void update() throws Exception {
         new Expectations(){{
             fakeService.update((Fake)any);
-            result = returnWhatWasPassed();
+            result = new ReturnPassedArgument<Fake>();
         }};
 
         FakeForm fakeForm = new FakeForm();
@@ -96,7 +96,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     public void delete() throws Exception {
         new Expectations(){{
             fakeService.delete((Fake)any);
-            result = returnWhatWasPassed();
+            result = new ReturnPassedArgument<Fake>();
         }};
 
         this.webClient.perform(MockMvcRequestBuilders.delete("/fake/42")
@@ -105,17 +105,6 @@ public class FakeControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(42))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Henk"));
-    }
-
-    protected Delegate returnWhatWasPassed() {
-        return new Delegate<Fake>() {
-            Fake delegate(Fake fake) {
-                if (fake.isNew()) {
-                    Deencapsulation.setField(fake, "id", 42L);
-                }
-                return fake;
-            }
-        };
     }
 
 }
