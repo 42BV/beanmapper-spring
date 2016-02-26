@@ -1,5 +1,8 @@
 # beanmapper-spring
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.beanmapper/beanmapper-spring/badge.svg)](http://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
+
 ## Input merging argument resolver
 
 ### Configuration
