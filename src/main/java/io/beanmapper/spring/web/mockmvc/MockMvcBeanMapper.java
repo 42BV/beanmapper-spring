@@ -34,7 +34,7 @@ public class MockMvcBeanMapper {
         conversionService.addConverter(String.class, entityClass, new MockEntityConverter<>(repository));
 
         // Add a BeanConverter for the target class to the BeanMapper
-        beanMapper.addConverter(new MockIdToEntityBeanConverter(repository, entityClass));
+        beanMapper.config().addConverter(new MockIdToEntityBeanConverter(repository, entityClass)).build();
 
         // Add the repository to the MockEntityFinder
         mockEntityFinder.addRepository(repository, entityClass);

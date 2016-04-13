@@ -1,12 +1,12 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
-import io.beanmapper.core.rule.MappableFields;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.web.converter.StructuredBody;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,7 +108,10 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             // Map our input form on the already persisted entity
             Object entity = entityFinder.find(id, entityClass);
             if (annotation.patch() && propertyNames != null) {
-                return beanMapper.map(data, entity, new MappableFields(propertyNames));
+                return beanMapper
+                        .wrapConfig().downsizeSource(new ArrayList<>(propertyNames))
+                        .build()
+                        .map(data, entity);
             } else {
                 return beanMapper.map(data, entity);
             }

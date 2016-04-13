@@ -4,6 +4,7 @@
 package io.beanmapper.spring;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonForm;
 
@@ -22,10 +23,11 @@ public class PageableMapperTest {
     private final Pageable pageable = new PageRequest(0, 10, new Sort("id"));
 
     private BeanMapper beanMapper;
-    
+
     {
-        beanMapper = new BeanMapper();
-        beanMapper.addPackagePrefix(ApplicationConfig.class);
+        beanMapper = new BeanMapperBuilder()
+                .addPackagePrefix(ApplicationConfig.class)
+                .build();
     }
 
     @Test

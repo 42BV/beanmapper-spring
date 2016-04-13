@@ -4,6 +4,7 @@
 package io.beanmapper.spring.converter;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.converter.BeanMapperConverterAdapter;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonView;
@@ -16,7 +17,7 @@ public class BeanMapperConverterAdapterTest {
     
     @Test
     public void testConvert() {
-        BeanMapper beanMapper = new BeanMapper();
+        BeanMapper beanMapper = new BeanMapperBuilder().build();
         DefaultConversionService conversionService = new DefaultConversionService();
         conversionService.addConverter(new BeanMapperConverterAdapter(beanMapper));
         Person person = new Person();

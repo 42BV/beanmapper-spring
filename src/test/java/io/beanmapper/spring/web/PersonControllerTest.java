@@ -4,6 +4,7 @@
 package io.beanmapper.spring.web;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.model.Person;
@@ -46,8 +47,9 @@ public class PersonControllerTest extends AbstractSpringTest {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(objectMapper);
         
-        BeanMapper beanMapper = new BeanMapper();
-        beanMapper.addPackagePrefix(ApplicationConfig.class);
+        BeanMapper beanMapper = new BeanMapperBuilder()
+                .addPackagePrefix(ApplicationConfig.class)
+                .build();
 
         this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(

@@ -1,6 +1,7 @@
 package io.beanmapper.spring.web.mockmvc.fakedomain;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.converter.IdToEntityBeanConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,14 +14,11 @@ public class FakeApplicationConfig {
 
     @Bean
     public BeanMapper beanMapper() {
-        BeanMapper bm = new BeanMapper();
-        bm.addPackagePrefix(FakeApplicationConfig.class);
-//        bm.setBeanUnproxy(new AdvancedBeanUnproxy());
+        BeanMapperBuilder bm = new BeanMapperBuilder()
+                .addPackagePrefix(FakeApplicationConfig.class);
         if (applicationContext != null) {
             bm.addConverter(new IdToEntityBeanConverter(applicationContext));
         }
-        return bm;
+        return bm.build();
     }
-
-
 }
