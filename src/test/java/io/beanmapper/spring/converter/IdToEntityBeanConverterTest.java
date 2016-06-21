@@ -4,6 +4,7 @@
 package io.beanmapper.spring.converter;
 
 import io.beanmapper.spring.AbstractSpringTest;
+import io.beanmapper.spring.model.Artist;
 import io.beanmapper.spring.model.Asset;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
@@ -51,6 +52,18 @@ public class IdToEntityBeanConverterTest extends AbstractSpringTest {
         personRepository.save(person);
 
         Assert.assertEquals(person.getId(), ((Person) beanConverter.convert(person.getId(), Person.class, null)).getId());
+    }
+    
+    @Test
+    public void testSameClassNoMatch() {
+        Person person = new Person();
+        person.setName("Henk");
+        Assert.assertFalse(beanConverter.match(person.getClass(), Person.class));
+    }
+    
+    @Test
+    public void noRepoForArtist() {
+        Assert.assertFalse(beanConverter.match(Long.class, Artist.class));
     }
     
     @Test

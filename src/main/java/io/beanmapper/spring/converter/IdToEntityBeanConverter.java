@@ -37,6 +37,12 @@ public class IdToEntityBeanConverter implements BeanConverter {
      */
     @Override
     public boolean match(Class<?> sourceClass, Class<?> targetClass) {
+        if (targetClass.isAssignableFrom(sourceClass)) {
+            return false;
+        }
+        if (!repositories.hasRepositoryFor(targetClass)) {
+            return false;
+        }
         boolean match = false;
         EntityInformation<Object, Serializable> information = repositories.getEntityInformationFor(targetClass);
         if (information != null) {
