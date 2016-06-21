@@ -3,7 +3,7 @@
 
     <groupId>io.beanmapper</groupId>
     <artifactId>beanmapper-spring</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>42 Bean Mapper Spring Support</name>
     <description>Spring support for the Bean Mapper</description>
