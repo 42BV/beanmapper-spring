@@ -16,7 +16,7 @@ public class MockMvcBeanMapper {
 
     private final List<HttpMessageConverter<?>> messageConverters;
 
-    private final BeanMapper beanMapper;
+    private BeanMapper beanMapper;
 
     private MockEntityFinder mockEntityFinder = new MockEntityFinder();
 
@@ -25,7 +25,7 @@ public class MockMvcBeanMapper {
                              BeanMapper beanMapper) {
         this.conversionService = conversionService;
         this.messageConverters = messageConverters;
-        this.beanMapper = beanMapper;
+        this.beanMapper = beanMapper.config().build();
     }
 
     public void registerRepository(CrudRepository<? extends Persistable, Long> repository, Class<?> entityClass) {
@@ -34,7 +34,7 @@ public class MockMvcBeanMapper {
         conversionService.addConverter(String.class, entityClass, new MockEntityConverter<>(repository));
 
         // Add a BeanConverter for the target class to the BeanMapper
-        beanMapper.config().addConverter(new MockIdToEntityBeanConverter(repository, entityClass)).build();
+        beanMapper = beanMapper.config().addConverter(new MockIdToEntityBeanConverter(repository, entityClass)).build();
 
         // Add the repository to the MockEntityFinder
         mockEntityFinder.addRepository(repository, entityClass);
