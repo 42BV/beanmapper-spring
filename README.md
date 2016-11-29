@@ -1,7 +1,10 @@
 # beanmapper-spring
 
+[![Build Status](https://travis-ci.org/42BV/beanmapper-spring.svg?branch=master)](https://travis-ci.org/42BV/beanmapper-spring)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1cd19a18411b4fab97a49af920d72af4)](https://www.codacy.com/app/42bv/beanmapper-spring)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.beanmapper/beanmapper-spring/badge.svg)](http://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
+[![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## Input merging argument resolver
 
@@ -97,3 +100,16 @@ new NonStrictExpectations() {{
 }};
 ```
 
+## License
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
