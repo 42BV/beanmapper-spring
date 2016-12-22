@@ -61,5 +61,35 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.fakeName").value("Henk"));
     }
 
+    @Test
+    public void createThrowsValidationExceptionForForm() throws Exception {
+        ContainingFakeForm containingFakeForm = new ContainingFakeForm();
+        containingFakeForm.fakeId = 42L;
+
+        this.webClient.perform(MockMvcRequestBuilders.post("/containing-fake/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new FakeWebMvcConfig().objectMapper().writeValueAsString(containingFakeForm)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void createThrowsValidationExceptionForMappedTarget() throws Exception {
+        new Expectations(){{
+            fakeRepository.findOne(42L);
+            result = fake;
+        }};
+
+        ContainingFakeForm containingFakeForm = new ContainingFakeForm();
+        containingFakeForm.fakeId = 42L;
+        containingFakeForm.passMe = "somevalue";
+
+        this.webClient.perform(MockMvcRequestBuilders.post("/containing-fake/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new FakeWebMvcConfig().objectMapper().writeValueAsString(containingFakeForm)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
 
 }
