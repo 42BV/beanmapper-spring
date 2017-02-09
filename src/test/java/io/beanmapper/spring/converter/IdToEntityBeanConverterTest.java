@@ -51,7 +51,7 @@ public class IdToEntityBeanConverterTest extends AbstractSpringTest {
         person.setName("Henk");
         personRepository.save(person);
 
-        Assert.assertEquals(person.getId(), ((Person) beanConverter.convert(person.getId(), Person.class, null)).getId());
+        Assert.assertEquals(person.getId(), ((Person) beanConverter.convert(null, person.getId(), Person.class, null)).getId());
     }
     
     @Test
@@ -68,7 +68,7 @@ public class IdToEntityBeanConverterTest extends AbstractSpringTest {
     
     @Test
     public void testConvertNull() {
-        Assert.assertNull(beanConverter.convert(null, Person.class, null));
+        Assert.assertNull(beanConverter.convert(null, null, Person.class, null));
     }
 
 }

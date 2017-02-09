@@ -3,6 +3,7 @@
  */
 package io.beanmapper.spring.converter;
 
+import io.beanmapper.BeanMapper;
 import io.beanmapper.core.BeanFieldMatch;
 import io.beanmapper.core.converter.BeanConverter;
 
@@ -30,14 +31,11 @@ public class ConversionServiceBeanConverter implements BeanConverter {
         this.conversionService = conversionService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Object convert(Object source, Class<?> targetClass, BeanFieldMatch beanFieldMatch) {
+    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanFieldMatch beanFieldMatch) {
         return conversionService.convert(source, targetClass);
     }
-    
+
     /**
      * {@inheritDoc}
      */

@@ -34,7 +34,7 @@ public class ConversionServiceBeanConverterTest {
     
     @Test
     public void testConvert() {
-        Assert.assertEquals(Long.valueOf(1), beanConverter.convert("1", Long.class, null));
+        Assert.assertEquals(Long.valueOf(1), beanConverter.convert(null, "1", Long.class, null));
     }
 
 }
