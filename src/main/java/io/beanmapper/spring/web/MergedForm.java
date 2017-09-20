@@ -38,4 +38,9 @@ public @interface MergedForm {
      */
     String mergeId() default "";
 
+    /**
+     * Class types of the before-/afterMerge instances maintained in MergePair
+     */
+    Class<?> mergePairClass() default Object.class;
+
 }

@@ -138,4 +138,34 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
     }
 
+    @Test
+    public void testPair() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Leiden");
+        person.setStreet("Stationsplein");
+        person.setHouseNumber("42");
+        person.setBankAccount("1234567890");
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/pair")
+                .content("{\"name\":\"Jan\",\"city\":\"Delft\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.name").value("Henk"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.street").value("Stationsplein"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.city").value("Leiden"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.houseNumber").value("42"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.bankAccount").value("1234567890"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.street").value("Stationsplein"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.city").value("Delft"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.houseNumber").value("42"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.bankAccount").value("1234567890"));
+
+    }
+
 }
