@@ -3,6 +3,8 @@
  */
 package io.beanmapper.spring.web;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.AbstractSpringTest;
@@ -13,6 +15,7 @@ import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 
 import java.util.Arrays;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -136,6 +140,29 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
+    }
+
+    @Test
+    public void multipartForm() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setStreet("Stationsplein");
+        personRepository.save(person);
+
+        byte[] bytes = IOUtils.toByteArray("CAFEBABE");
+        MockMultipartFile photoPart = new MockMultipartFile("photo", "photo.jpeg", "image/jpeg", bytes);
+        MockMultipartFile personPart = new MockMultipartFile("person", "", "application/json", "{\"name\":\"Jan\"}".getBytes());
+
+        webClient.perform(
+                    MockMvcRequestBuilders
+                        .fileUpload("/person/" + person.getId() + "/multipart")
+                        .file(personPart)
+                        .file(photoPart)
+                )
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.street").value("Stationsplein"));
     }
 
     @Test
