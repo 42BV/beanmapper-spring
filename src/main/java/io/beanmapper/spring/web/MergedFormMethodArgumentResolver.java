@@ -1,15 +1,16 @@
 package io.beanmapper.spring.web;
 
-import io.beanmapper.BeanMapper;
-import io.beanmapper.spring.Lazy;
-import io.beanmapper.spring.web.converter.StructuredBody;
-
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import io.beanmapper.BeanMapper;
+import io.beanmapper.spring.Lazy;
+import io.beanmapper.spring.web.converter.StructuredBody;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Conventions;
@@ -25,12 +26,16 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestPartMethodArgumentResolver;
 
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
 
     private final BeanMapper beanMapper;
 
     private final EntityFinder entityFinder;
+
+    private final RequestPartMethodArgumentResolver multiPartResolver;
+
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
                                             BeanMapper beanMapper, 
@@ -44,6 +49,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         super(messageConverters);
         this.beanMapper = beanMapper;
         this.entityFinder = entityFinder;
+        this.multiPartResolver = new RequestPartMethodArgumentResolver(messageConverters);
     }
 
     /**
@@ -64,7 +70,13 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         MergedForm annotation = parameter.getParameterAnnotation(MergedForm.class);
         Class<?> parameterType = parameter.getParameterType();
         Long id = resolveId(webRequest, annotation.mergeId());
-        Object form = readWithMessageConverters(webRequest, parameter, annotation.value());
+
+        final Object form;
+        if (annotation.multiPart().length() > 0) {
+            form = readFromMultiPartForm(parameter, mavContainer, webRequest, binderFactory, annotation);
+        } else {
+            form = readWithMessageConverters(webRequest, parameter, annotation.value());
+        }
 
         // Check for @Valid on the mapped target and apply the validation rules to form
         validateObject(parameter, mavContainer, webRequest, binderFactory, getBody(form));
@@ -79,6 +91,17 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             validateObject(parameter, mavContainer, webRequest, binderFactory, mappedTarget);
             return mappedTarget;
         }
+    }
+
+    private Object readFromMultiPartForm(
+            MethodParameter parameter, ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory,
+            MergedForm annotation) throws Exception {
+        MethodParameter formParameter = new MethodParameter(parameter);
+        Field f1 = formParameter.getClass().getDeclaredField("parameterType");
+        f1.setAccessible(true);
+        f1.set(formParameter, annotation.value());
+        return multiPartResolver.resolveArgument(formParameter, mavContainer, webRequest, binderFactory);
     }
 
     private void validateObject(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory, Object objectToValidate) throws Exception {

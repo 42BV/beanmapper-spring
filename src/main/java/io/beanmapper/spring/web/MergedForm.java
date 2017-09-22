@@ -43,4 +43,10 @@ public @interface MergedForm {
      */
     Class<?> mergePairClass() default Object.class;
 
+    /**
+     * The name of the request part in the multipart form
+     * @return the name of the request part in the multipart form
+     */
+    String multiPart() default "";
+
 }

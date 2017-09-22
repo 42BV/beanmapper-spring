@@ -3,6 +3,8 @@
  */
 package io.beanmapper.spring.web;
 
+import javax.validation.Valid;
+
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonForm;
@@ -10,7 +12,9 @@ import io.beanmapper.spring.model.PersonForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/person")
@@ -44,6 +48,14 @@ public class PersonController {
     @ResponseBody
     public Person updateLazy(@MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) {
         return person.get();
+    }
+
+    @RequestMapping(value = "/{id}/multipart", method = RequestMethod.POST)
+    @ResponseBody
+    public Person updateForMultipart(
+            @Valid @MergedForm(value = PersonForm.class, mergeId = "id", multiPart = "person") Person person,
+            @RequestPart(value = "photo", required = false) MultipartFile photo) {
+        return person;
     }
 
     @RequestMapping(value = "/{id}/pair", method = RequestMethod.PUT)
