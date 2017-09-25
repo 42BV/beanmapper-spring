@@ -46,4 +46,10 @@ public class PersonController {
         return person.get();
     }
 
+    @RequestMapping(value = "/{id}/pair", method = RequestMethod.PUT)
+    @ResponseBody
+    public MergePair<Person> updateReturnPair(@MergedForm(value = PersonForm.class, mergeId = "id", mergePairClass = Person.class) MergePair personPair) {
+        return personPair;
+    }
+
 }

@@ -128,22 +128,23 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     private Object resolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) {
         Object data = getBody(form);
         Set<String> propertyNames = getPropertyNames(form);
+        final MergePair mergePair = new MergePair(beanMapper, entityFinder, entityClass, annotation);
 
         if (id == null) {
             // Create a new entity using our form data
-            return beanMapper.map(data, entityClass);
+            mergePair.initNew(data);
         } else {
             // Map our input form on the already persisted entity
-            Object entity = entityFinder.find(id, entityClass);
+            BeanMapper customBeanMapper = beanMapper;
             if (annotation.patch() && propertyNames != null) {
-                return beanMapper
-                        .wrapConfig().downsizeSource(new ArrayList<>(propertyNames))
-                        .build()
-                        .map(data, entity);
-            } else {
-                return beanMapper.map(data, entity);
+                customBeanMapper = beanMapper
+                        .wrapConfig()
+                        .downsizeSource(new ArrayList<>(propertyNames))
+                        .build();
             }
+            mergePair.merge(customBeanMapper, data, id);
         }
+        return mergePair.result();
     }
 
     private class LazyResolveEntity implements Lazy<Object> {
