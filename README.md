@@ -5,6 +5,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.beanmapper/beanmapper-spring/badge.svg)](http://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
 [![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![BCH compliance](https://bettercodehub.com/edge/badge/42BV/beanmapper-spring?branch=master)](https://bettercodehub.com/)
 
 ## Input merging argument resolver
 
