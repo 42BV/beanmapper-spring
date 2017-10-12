@@ -34,7 +34,7 @@ public class PageableMapper {
         List<T> transformed;
         if (source.hasContent()) {
             List<S> content = new ArrayList<S>(source.getContent());
-            transformed = (List<T>) beanMapper.map(content, targetClass, ArrayList.class);
+            transformed = (List<T>) beanMapper.map(content, targetClass);
         } else {
             transformed = Collections.emptyList();
         }
