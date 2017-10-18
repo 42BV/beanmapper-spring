@@ -3,12 +3,12 @@
  */
 package io.beanmapper.spring;
 
+import java.util.Arrays;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonForm;
-
-import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;

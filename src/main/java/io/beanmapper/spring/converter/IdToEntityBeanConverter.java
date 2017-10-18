@@ -1,10 +1,10 @@
 package io.beanmapper.spring.converter;
 
+import java.io.Serializable;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.core.BeanFieldMatch;
 import io.beanmapper.core.converter.BeanConverter;
-
-import java.io.Serializable;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;

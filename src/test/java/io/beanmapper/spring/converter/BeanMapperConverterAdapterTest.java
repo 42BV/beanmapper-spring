@@ -5,7 +5,6 @@ package io.beanmapper.spring.converter;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
-import io.beanmapper.spring.converter.BeanMapperConverterAdapter;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonView;
 

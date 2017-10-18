@@ -3,6 +3,7 @@ package io.beanmapper.spring.web.mockmvc.fakedomain;
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.converter.IdToEntityBeanConverter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

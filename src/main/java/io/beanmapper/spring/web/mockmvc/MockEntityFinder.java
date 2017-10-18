@@ -1,12 +1,14 @@
 package io.beanmapper.spring.web.mockmvc;
 
-import io.beanmapper.spring.web.EntityFinder;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.repository.CrudRepository;
-
-import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.EntityNotFoundException;
+
+import io.beanmapper.spring.web.EntityFinder;
+
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.repository.CrudRepository;
 
 public class MockEntityFinder implements EntityFinder {
 

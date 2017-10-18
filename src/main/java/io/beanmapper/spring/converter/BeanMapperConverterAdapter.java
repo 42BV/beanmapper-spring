@@ -1,9 +1,9 @@
 package io.beanmapper.spring.converter;
 
-import io.beanmapper.BeanMapper;
-
 import java.util.Collections;
 import java.util.Set;
+
+import io.beanmapper.BeanMapper;
 
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;

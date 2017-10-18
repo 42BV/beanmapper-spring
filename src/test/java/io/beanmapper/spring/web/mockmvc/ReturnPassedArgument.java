@@ -2,6 +2,7 @@ package io.beanmapper.spring.web.mockmvc;
 
 import mockit.Deencapsulation;
 import mockit.Delegate;
+
 import org.springframework.data.domain.Persistable;
 
 public class ReturnPassedArgument<T extends Persistable> implements Delegate<T> {

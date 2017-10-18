@@ -1,14 +1,15 @@
 package io.beanmapper.spring.web.mockmvc;
 
+import java.util.List;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;
+
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-
-import java.util.List;
 
 public class MockMvcBeanMapper {
 

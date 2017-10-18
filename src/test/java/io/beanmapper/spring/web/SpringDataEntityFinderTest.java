@@ -2,12 +2,13 @@ package io.beanmapper.spring.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import javax.persistence.EntityNotFoundException;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

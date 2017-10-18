@@ -1,6 +1,7 @@
 package io.beanmapper.spring.unproxy;
 
 import io.beanmapper.core.unproxy.BeanUnproxy;
+
 import org.hibernate.proxy.HibernateProxy;
 
 public class HibernateAwareBeanUnproxy implements BeanUnproxy {

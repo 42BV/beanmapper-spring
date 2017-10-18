@@ -3,11 +3,11 @@
  */
 package io.beanmapper.spring;
 
-import io.beanmapper.BeanMapper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.beanmapper.BeanMapper;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

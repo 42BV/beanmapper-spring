@@ -1,10 +1,16 @@
 package io.beanmapper.spring.web.mockmvc;
 
-import io.beanmapper.spring.web.mockmvc.fakedomain.*;
+import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFake;
+import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFakeController;
+import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFakeForm;
+import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFakeService;
+import io.beanmapper.spring.web.mockmvc.fakedomain.Fake;
+import io.beanmapper.spring.web.mockmvc.fakedomain.FakeRepository;
+import io.beanmapper.spring.web.mockmvc.fakedomain.FakeWebMvcConfig;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.NonStrictExpectations;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
