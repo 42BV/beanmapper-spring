@@ -152,7 +152,7 @@ public class PersonControllerTest extends AbstractSpringTest {
 
         byte[] bytes = IOUtils.toByteArray("CAFEBABE");
         MockMultipartFile photoPart = new MockMultipartFile("photo", "photo.jpeg", "image/jpeg", bytes);
-        MockMultipartFile personPart = new MockMultipartFile("person", "", "application/json", "{\"name\":\"Jan\"}".getBytes());
+        MockMultipartFile personPart = new MockMultipartFile("personForm", "", "application/json", "{\"name\":\"Jan\"}".getBytes());
 
         webClient.perform(
                     MockMvcRequestBuilders
