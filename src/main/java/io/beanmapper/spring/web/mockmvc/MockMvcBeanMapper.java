@@ -28,7 +28,7 @@ public class MockMvcBeanMapper {
         this.beanMapper = beanMapper.config().build();
     }
 
-    public void registerRepository(CrudRepository<? extends Persistable, Long> repository, Class<?> entityClass) {
+    public <T extends Persistable> void registerRepository(CrudRepository<T, Long> repository, Class<T> entityClass) {
 
         // Add a converter for the target class to the generic conversion service
         conversionService.addConverter(String.class, entityClass, new MockEntityConverter<>(repository));
