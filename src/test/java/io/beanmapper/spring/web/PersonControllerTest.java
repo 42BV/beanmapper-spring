@@ -3,7 +3,10 @@
  */
 package io.beanmapper.spring.web;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
@@ -12,8 +15,6 @@ import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
-
-import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -72,7 +73,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Henk"));
+                .andExpect(jsonPath("$.name").value("Henk"));
     }
 
     @Test
@@ -87,9 +88,9 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.city").value("Lisse"));
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.city").value("Lisse"));
     }
     
     @Test
@@ -103,10 +104,10 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.city").doesNotExist());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.city").doesNotExist());
     }
     
     @Test
@@ -122,9 +123,9 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.city").doesNotExist());
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.city").doesNotExist());
     }
 
     @Test
@@ -138,8 +139,8 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"));
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"));
     }
 
     @Test
@@ -160,9 +161,9 @@ public class PersonControllerTest extends AbstractSpringTest {
                         .file(photoPart)
                 )
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.street").value("Stationsplein"));
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.street").value("Stationsplein"));
     }
 
     @Test
@@ -180,18 +181,18 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.name").value("Henk"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.street").value("Stationsplein"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.city").value("Leiden"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.houseNumber").value("42"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.beforeMerge.bankAccount").value("1234567890"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.id").value(person.getId().intValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.name").value("Jan"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.street").value("Stationsplein"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.city").value("Delft"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.houseNumber").value("42"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.afterMerge.bankAccount").value("1234567890"));
+                .andExpect(jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.beforeMerge.name").value("Henk"))
+                .andExpect(jsonPath("$.beforeMerge.street").value("Stationsplein"))
+                .andExpect(jsonPath("$.beforeMerge.city").value("Leiden"))
+                .andExpect(jsonPath("$.beforeMerge.houseNumber").value("42"))
+                .andExpect(jsonPath("$.beforeMerge.bankAccount").value("1234567890"))
+                .andExpect(jsonPath("$.afterMerge.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.afterMerge.name").value("Jan"))
+                .andExpect(jsonPath("$.afterMerge.street").value("Stationsplein"))
+                .andExpect(jsonPath("$.afterMerge.city").value("Delft"))
+                .andExpect(jsonPath("$.afterMerge.houseNumber").value("42"))
+                .andExpect(jsonPath("$.afterMerge.bankAccount").value("1234567890"));
 
     }
 

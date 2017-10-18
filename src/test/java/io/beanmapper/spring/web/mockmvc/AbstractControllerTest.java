@@ -38,7 +38,7 @@ public class AbstractControllerTest {
         return mockMvcBeanMapper.getBeanMapper();
     }
 
-    public void registerRepository(CrudRepository<? extends Persistable, Long> repository, Class<?> entityClass) {
+    public <T extends Persistable> void registerRepository(CrudRepository<T, Long> repository, Class<T> entityClass) {
         mockMvcBeanMapper.registerRepository(repository, entityClass);
     }
 }

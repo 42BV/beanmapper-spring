@@ -12,6 +12,8 @@ import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.web.converter.StructuredBody;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Conventions;
 import org.springframework.core.MethodParameter;
@@ -29,6 +31,8 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConv
 import org.springframework.web.servlet.mvc.method.annotation.RequestPartMethodArgumentResolver;
 
 public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final BeanMapper beanMapper;
 
@@ -101,6 +105,13 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         Field f1 = formParameter.getClass().getDeclaredField("parameterType");
         f1.setAccessible(true);
         f1.set(formParameter, annotation.value());
+        try {
+            Field f2 = formParameter.getClass().getDeclaredField("genericParameterType");
+            f2.setAccessible(true);
+            f2.set(formParameter, annotation.value());
+        } catch (NoSuchFieldException err) {
+            logger.warn("Older Spring version? Update to at least 4.3.10.RELEASE, see https://github.com/42BV/beanmapper-spring/issues/19");
+        }
         return multiPartResolver.resolveArgument(formParameter, mavContainer, webRequest, binderFactory);
     }
 
