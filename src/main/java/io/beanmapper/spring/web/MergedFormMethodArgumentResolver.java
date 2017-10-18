@@ -102,17 +102,21 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory,
             MergedForm annotation) throws Exception {
         MethodParameter formParameter = new MethodParameter(parameter);
-        Field f1 = formParameter.getClass().getDeclaredField("parameterType");
-        f1.setAccessible(true);
-        f1.set(formParameter, annotation.value());
+        setMethodParameterField(formParameter, "parameterType", annotation.value());
+        setMethodParameterField(formParameter, "genericParameterType", annotation.value());
+        setMethodParameterField(formParameter, "parameterName", annotation.multiPart());
+        setMethodParameterField(formParameter, "parameterNameDiscoverer", null);
+        return multiPartResolver.resolveArgument(formParameter, mavContainer, webRequest, binderFactory);
+    }
+
+    private void setMethodParameterField(MethodParameter formParameter, String fieldName, Object value) throws IllegalAccessException {
         try {
-            Field f2 = formParameter.getClass().getDeclaredField("genericParameterType");
-            f2.setAccessible(true);
-            f2.set(formParameter, annotation.value());
+            Field f = formParameter.getClass().getDeclaredField(fieldName);
+            f.setAccessible(true);
+            f.set(formParameter, value);
         } catch (NoSuchFieldException err) {
             logger.warn("Older Spring version? Update to at least 4.3.10.RELEASE, see https://github.com/42BV/beanmapper-spring/issues/19");
         }
-        return multiPartResolver.resolveArgument(formParameter, mavContainer, webRequest, binderFactory);
     }
 
     private void validateObject(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory, Object objectToValidate) throws Exception {

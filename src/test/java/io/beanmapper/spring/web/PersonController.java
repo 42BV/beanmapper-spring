@@ -53,7 +53,7 @@ public class PersonController {
     @RequestMapping(value = "/{id}/multipart", method = RequestMethod.POST)
     @ResponseBody
     public Person updateForMultipart(
-            @Valid @MergedForm(value = PersonForm.class, mergeId = "id", multiPart = "person") Person person,
+            @Valid @MergedForm(value = PersonForm.class, mergeId = "id", multiPart = "personForm") Person person,
             @RequestPart(value = "photo", required = false) MultipartFile photo) {
         return person;
     }
