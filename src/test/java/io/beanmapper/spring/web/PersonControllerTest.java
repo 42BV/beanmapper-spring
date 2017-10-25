@@ -6,6 +6,7 @@ package io.beanmapper.spring.web;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import io.beanmapper.BeanMapper;
@@ -14,10 +15,12 @@ import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
+import io.beanmapper.spring.model.Tag;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -167,6 +170,29 @@ public class PersonControllerTest extends AbstractSpringTest {
     }
 
     @Test
+    public void testUpdateTags() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Leiden");
+        person.setTags(new ArrayList<Tag>() {{
+            add(Tag.DEBTOR);
+            add(Tag.UPSELLING);
+        }});
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/no-patch")
+                .content("{\"name\":\"Jan\",\"city\":\"Lisse\",\"tags\":[\"DEBTOR\",\"CUSTOMER\"]}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.city").value("Lisse"))
+                .andExpect(jsonPath("$.tags[0]").value("DEBTOR"))
+                .andExpect(jsonPath("$.tags[1]").value("CUSTOMER"));
+    }
+
+    @Test
     public void testPair() throws Exception {
         Person person = new Person();
         person.setName("Henk");
@@ -193,7 +219,32 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(jsonPath("$.afterMerge.city").value("Delft"))
                 .andExpect(jsonPath("$.afterMerge.houseNumber").value("42"))
                 .andExpect(jsonPath("$.afterMerge.bankAccount").value("1234567890"));
+    }
 
+    @Test
+    @Ignore("Needs to be part of a higher-level fix for dealing with collections")
+    public void testPairWithCollection() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        person.setCity("Leiden");
+        person.setStreet("Stationsplein");
+        person.setHouseNumber("42");
+        person.setBankAccount("1234567890");
+        person.setTags(new ArrayList<Tag>() {{
+            add(Tag.UPSELLING);
+        }});
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/pair")
+                .content("{\"name\":\"Jan\",\"city\":\"Lisse\",\"tags\":[\"CUSTOMER\",\"DEBTOR\"]}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.beforeMerge.tags[0]").value("UPSELLING"))
+                .andExpect(jsonPath("$.afterMerge.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.afterMerge.tags[0]").value("CUSTOMER"))
+                .andExpect(jsonPath("$.afterMerge.tags[1]").value("DEBTOR"));
     }
 
 }

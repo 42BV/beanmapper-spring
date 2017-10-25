@@ -1,6 +1,15 @@
 package io.beanmapper.spring.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 
 @Entity
 public class Person extends BaseEntity {
@@ -14,6 +23,12 @@ public class Person extends BaseEntity {
     private String city;
 
     private String bankAccount;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "owner_tag")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tag")
+    private List<Tag> tags = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -53,5 +68,13 @@ public class Person extends BaseEntity {
 
     public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }
