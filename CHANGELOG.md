@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.1.0] - 2017-10-25
+### Added
+- Issue [#24](https://github.com/42BV/beanmapper-spring/issues/24), **JpaAfterClearFlusher**; a class is offered than can be used to register an EntityManager so that it can be called after BeanMapper has called clear() on a collection. This might come in handy to force the ORM to flush. One use case is to force the inversion of executed SQL statements from insert/delete to delete/insert. 
+
 ## [2.0.2] - 2017-10-18
 ### Fixed
 - Issue [#21](https://github.com/42BV/beanmapper-spring/issues/21), **Multipart part name not used correctly**; the multipart part name was not handled correctly. Spring's multipart handler is now passed a MethodParameter which has the correct part name and also disable the parameter name explorer, so it is forced to used the overwritten part name.
