@@ -46,7 +46,7 @@ public class PersonController {
 
     @RequestMapping(value = "/{id}/lazy", method = RequestMethod.PUT)
     @ResponseBody
-    public Person updateLazy(@MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) {
+    public Person updateLazy(@Valid @MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) throws Exception {
         return person.get();
     }
 

@@ -15,6 +15,6 @@ public interface Lazy<T> {
      * Retrieve the entity instance.
      * @return the entity instance
      */
-    T get();
+    T get() throws Exception;
 
 }

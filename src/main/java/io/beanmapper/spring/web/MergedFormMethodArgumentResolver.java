@@ -15,11 +15,9 @@ import io.beanmapper.spring.web.converter.StructuredBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.Conventions;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -82,18 +80,17 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             form = readWithMessageConverters(webRequest, parameter, annotation.value());
         }
 
+        WebRequestParameters webRequestParameters = new WebRequestParameters(parameter, mavContainer, webRequest, binderFactory);
+
         // Check for @Valid on the mapped target and apply the validation rules to form
-        validateObject(parameter, mavContainer, webRequest, binderFactory, getBody(form));
+        validateObject(webRequestParameters, getBody(form));
 
         if (Lazy.class.isAssignableFrom(parameterType)) {
             ParameterizedType genericType = (ParameterizedType) parameter.getGenericParameterType();
             Type entityType = genericType.getActualTypeArguments()[0];
-            return new LazyResolveEntity(form, id, (Class<?>) entityType, annotation);
+            return new LazyResolveEntity(form, id, (Class<?>) entityType, annotation, webRequestParameters);
         } else {
-            Object mappedTarget = resolveEntity(form, id, parameterType, annotation);
-            // Check for @Valid on the mapped target and apply the validation rules to the mapped target
-            validateObject(parameter, mavContainer, webRequest, binderFactory, mappedTarget);
-            return mappedTarget;
+            return resolveEntity(form, id, parameterType, annotation, webRequestParameters);
         }
     }
 
@@ -119,16 +116,15 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         }
     }
 
-    private void validateObject(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory, Object objectToValidate) throws Exception {
-        String name = Conventions.getVariableNameForParameter(parameter);
-        WebDataBinder binder = binderFactory.createBinder(webRequest, objectToValidate, name);
+    private void validateObject(WebRequestParameters webRequestParameters, Object objectToValidate) throws Exception {
+        WebDataBinder binder = webRequestParameters.createBinder(objectToValidate);
         if (objectToValidate != null) {
-            validateIfApplicable(binder, parameter);
-            if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
-                throw new MethodArgumentNotValidException(parameter, binder.getBindingResult());
+            validateIfApplicable(binder, webRequestParameters.getParameter());
+            if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, webRequestParameters.getParameter())) {
+                throw new MethodArgumentNotValidException(webRequestParameters.getParameter(), binder.getBindingResult());
             }
         }
-        mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + name, binder.getBindingResult());
+        webRequestParameters.setBindingResult(binder.getBindingResult());
     }
 
     private Long resolveId(NativeWebRequest webRequest, String mergeId) {
@@ -163,7 +159,9 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         return form instanceof StructuredBody ? ((StructuredBody) form).getPropertyNames() : null;
     }
 
-    private Object resolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) {
+    private Object resolveEntity(
+            Object form, Long id, Class<?> entityClass, MergedForm annotation,
+            WebRequestParameters webRequestParameters) throws Exception {
         Object data = getBody(form);
         Set<String> propertyNames = getPropertyNames(form);
         final MergePair mergePair = new MergePair(beanMapper, entityFinder, entityClass, annotation);
@@ -182,7 +180,10 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             }
             mergePair.merge(customBeanMapper, data, id);
         }
-        return mergePair.result();
+        Object mappedTarget = mergePair.result();
+        // Check for @Valid on the mapped target and apply the validation rules to the mapped target
+        validateObject(webRequestParameters, mappedTarget);
+        return mappedTarget;
     }
 
     private class LazyResolveEntity implements Lazy<Object> {
@@ -191,20 +192,24 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         private final Long id;
         private final Class<?> entityClass;
         private final MergedForm annotation;
+        private final WebRequestParameters webRequestParameters;
         
-        public LazyResolveEntity(Object form, Long id, Class<?> entityClass, MergedForm annotation) {
+        public LazyResolveEntity(
+                Object form, Long id, Class<?> entityClass,
+                MergedForm annotation, WebRequestParameters webRequestParameters) {
             this.form = form;
             this.id = id;
             this.entityClass = entityClass;
             this.annotation = annotation;
+            this.webRequestParameters = webRequestParameters;
         }
         
         /**
          * {@inheritDoc}
          */
         @Override
-        public Object get() {
-            return resolveEntity(form, id, entityClass, annotation);
+        public Object get() throws Exception {
+            return resolveEntity(form, id, entityClass, annotation, webRequestParameters);
         }
         
     }

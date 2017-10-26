@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- **BREAKING CHANGE** Issue [#26](https://github.com/42BV/beanmapper-spring/issues/26), **Validations for the entity are not run for Lazy targets**; the @MergedForm maps to a Lazy object, it delays the process of mapping until the time that get() is called on the Lazy object. At that time, it should work exactly the same way as a regular validation run. Forms are always validated right away. However, the final objects are only validated when direct mapping takes place. The process has been refactored so that validation on the final target is included in the delayed mapping process. Note that Lazy.get() must now deal with Exception. The pro of this approach is that it hooks onto the regular binding result handler. 
 
 ## [2.1.0] - 2017-10-25
 ### Added
