@@ -10,10 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Person extends BaseEntity {
 
+    @NotNull
     private String name;
 
     private String street;

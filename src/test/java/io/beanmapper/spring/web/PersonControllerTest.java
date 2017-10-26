@@ -32,7 +32,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +74,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Henk\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Henk"));
     }
 
@@ -90,7 +89,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.name").value("Jan"))
                 .andExpect(jsonPath("$.city").value("Lisse"));
@@ -125,7 +124,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.name").value("Jan"))
                 .andExpect(jsonPath("$.city").doesNotExist());
@@ -141,9 +140,22 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.name").value("Jan"));
+    }
+
+    @Test
+    public void testLazyFailFinalValidation() throws Exception {
+        Person person = new Person();
+        person.setName("Henk");
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/lazy")
+                .content("{}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -206,7 +218,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\",\"city\":\"Delft\"}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.beforeMerge.name").value("Henk"))
                 .andExpect(jsonPath("$.beforeMerge.street").value("Stationsplein"))
@@ -239,7 +251,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .content("{\"name\":\"Jan\",\"city\":\"Lisse\",\"tags\":[\"CUSTOMER\",\"DEBTOR\"]}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.beforeMerge.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.beforeMerge.tags[0]").value("UPSELLING"))
                 .andExpect(jsonPath("$.afterMerge.id").value(person.getId().intValue()))
