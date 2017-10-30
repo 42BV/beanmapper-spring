@@ -9,14 +9,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.persistence.EntityManager;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.ApplicationConfig;
+import io.beanmapper.spring.flusher.JpaAfterClearFlusher;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
 import io.beanmapper.spring.model.Tag;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
+import mockit.Mocked;
+import mockit.StrictExpectations;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -40,25 +45,36 @@ public class PersonControllerTest extends AbstractSpringTest {
  
     private MockMvc webClient;
 
+    private BeanMapper beanMapper;
+
+    private MappingJackson2HttpMessageConverter converter;
+
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     @Autowired
     private PersonRepository personRepository;
-    
+
+    @Mocked
+    private EntityManager entityManager;
+
     @Before
     public void setUp() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(objectMapper);
-        
-        BeanMapper beanMapper = new BeanMapperBuilder()
+
+        beanMapper = new BeanMapperBuilder()
                 .addPackagePrefix(ApplicationConfig.class)
                 .build();
 
-        this.webClient = MockMvcBuilders.standaloneSetup(new PersonController())
+        this.webClient = createWebClient(beanMapper);
+    }
+
+    private MockMvc createWebClient(BeanMapper beanMapper) {
+        return MockMvcBuilders.standaloneSetup(new PersonController())
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
                         Arrays.<HttpMessageConverter<?>> asList(new StructuredJsonMessageConverter(converter)),
                         beanMapper,
@@ -67,7 +83,7 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .setConversionService(new FormattingConversionService())
                 .build();
     }
-    
+
     @Test
     public void testCreate() throws Exception {
         this.webClient.perform(MockMvcRequestBuilders.post("/person")
@@ -138,6 +154,34 @@ public class PersonControllerTest extends AbstractSpringTest {
         
         this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/lazy")
                 .content("{\"name\":\"Jan\"}")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(person.getId().intValue()))
+                .andExpect(jsonPath("$.name").value("Jan"));
+    }
+
+    @Test
+    public void testLazyTriggersFlush() throws Exception {
+
+        new StrictExpectations(){{
+            entityManager.flush();
+        }};
+
+        JpaAfterClearFlusher flusher = new JpaAfterClearFlusher(entityManager);
+
+        this.webClient = createWebClient(new BeanMapperBuilder()
+                .addPackagePrefix(ApplicationConfig.class)
+                .addAfterClearFlusher(flusher)
+                .build());
+
+        Person person = new Person();
+        person.setName("Henk");
+        person.setTags(Arrays.asList(Tag.CUSTOMER, Tag.UPSELLING));
+        personRepository.save(person);
+
+        this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/lazy")
+                .content("{\"name\":\"Jan\",\"tags\":[\"DEBTOR\",\"CUSTOMER\"]}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())

@@ -27,6 +27,7 @@ public class JpaAfterClearFlusherTest {
             items.add("B");
         }};
         BeanMapper beanMapper = new BeanMapperBuilder()
+                .setFlushEnabled(true)
                 .addAfterClearFlusher(flusher)
                 .build();
         beanMapper.map(source, target);

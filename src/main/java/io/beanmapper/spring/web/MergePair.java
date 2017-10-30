@@ -22,9 +22,9 @@ public class MergePair<T> {
         setAfterMerge(beanMapper.map(source, targetEntityClass()));
     }
 
-    public void merge(BeanMapper customBeanMapper, Object source, Long id) {
+    public void merge(Object source, Long id) {
         T target = (T)findSource(id);
-        setAfterMerge(customBeanMapper.map(source, target));
+        setAfterMerge(beanMapper.map(source, target));
     }
 
     public T getBeforeMerge() {
@@ -40,7 +40,7 @@ public class MergePair<T> {
     }
 
     private void createBeforeMerge(Object source) {
-        setBeforeMerge(beanMapper.map(source, targetEntityClass()));
+        setBeforeMerge(beanMapper.wrapConfig().build().map(source, targetEntityClass()));
     }
 
     private Object findSource(Long id) {

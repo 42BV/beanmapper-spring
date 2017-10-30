@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - **BREAKING CHANGE** Issue [#26](https://github.com/42BV/beanmapper-spring/issues/26), **Validations for the entity are not run for Lazy targets**; the @MergedForm maps to a Lazy object, it delays the process of mapping until the time that get() is called on the Lazy object. At that time, it should work exactly the same way as a regular validation run. Forms are always validated right away. However, the final objects are only validated when direct mapping takes place. The process has been refactored so that validation on the final target is included in the delayed mapping process. Note that Lazy.get() must now deal with Exception. The pro of this approach is that it hooks onto the regular binding result handler. 
+- Issue [#28](https://github.com/42BV/beanmapper-spring/issues/28), **when Lazy is used, set flushEnabled=true**; make sure to enable the global flushing after calling clear() when Lazy is used. In this case, the EntityManager is the most likely to be in a transaction context. This change works with [#90](https://github.com/42BV/beanmapper/issues/90), where the default for the BeanCollection is set to true. This means flushing will be called by default for BeanCollections operating in a Lazy "context".
 
 ## [2.1.0] - 2017-10-25
 ### Added

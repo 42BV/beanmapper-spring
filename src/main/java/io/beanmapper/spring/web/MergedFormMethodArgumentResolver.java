@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.web.converter.StructuredBody;
 
@@ -38,6 +39,8 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     private final RequestPartMethodArgumentResolver multiPartResolver;
 
+    private static final boolean FLUSH       = true;
+    private static final boolean NO_FLUSH    = false;
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
                                             BeanMapper beanMapper, 
@@ -90,7 +93,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             Type entityType = genericType.getActualTypeArguments()[0];
             return new LazyResolveEntity(form, id, (Class<?>) entityType, annotation, webRequestParameters);
         } else {
-            return resolveEntity(form, id, parameterType, annotation, webRequestParameters);
+            return resolveEntity(form, id, parameterType, annotation, webRequestParameters, NO_FLUSH);
         }
     }
 
@@ -161,24 +164,28 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     private Object resolveEntity(
             Object form, Long id, Class<?> entityClass, MergedForm annotation,
-            WebRequestParameters webRequestParameters) throws Exception {
+            WebRequestParameters webRequestParameters, boolean mustFlush) throws Exception {
         Object data = getBody(form);
         Set<String> propertyNames = getPropertyNames(form);
-        final MergePair mergePair = new MergePair(beanMapper, entityFinder, entityClass, annotation);
+
+        // Modify the BeanMapper to deal with special situations
+        BeanMapperBuilder customBeanMapperBuilder = beanMapper.wrapConfig();
+        if (annotation.patch() && propertyNames != null) {
+            customBeanMapperBuilder.downsizeSource(new ArrayList<>(propertyNames));
+        }
+        if (mustFlush) {
+            customBeanMapperBuilder.setFlushEnabled(true);
+        }
+        BeanMapper customBeanMapper = customBeanMapperBuilder.build();
+
+        final MergePair mergePair = new MergePair(customBeanMapper, entityFinder, entityClass, annotation);
 
         if (id == null) {
             // Create a new entity using our form data
             mergePair.initNew(data);
         } else {
             // Map our input form on the already persisted entity
-            BeanMapper customBeanMapper = beanMapper;
-            if (annotation.patch() && propertyNames != null) {
-                customBeanMapper = beanMapper
-                        .wrapConfig()
-                        .downsizeSource(new ArrayList<>(propertyNames))
-                        .build();
-            }
-            mergePair.merge(customBeanMapper, data, id);
+            mergePair.merge(data, id);
         }
         Object mappedTarget = mergePair.result();
         // Check for @Valid on the mapped target and apply the validation rules to the mapped target
@@ -209,7 +216,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
          */
         @Override
         public Object get() throws Exception {
-            return resolveEntity(form, id, entityClass, annotation, webRequestParameters);
+            return resolveEntity(form, id, entityClass, annotation, webRequestParameters, FLUSH);
         }
         
     }
