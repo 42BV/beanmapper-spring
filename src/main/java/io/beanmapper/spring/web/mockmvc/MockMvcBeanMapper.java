@@ -39,7 +39,6 @@ public class MockMvcBeanMapper {
 
         // Add the repository to the MockEntityFinder
         mockEntityFinder.addRepository(repository, entityClass);
-
     }
 
     public HandlerMethodArgumentResolver[] createHandlerMethodArgumentResolvers() {

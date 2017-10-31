@@ -27,7 +27,9 @@ public class AbstractControllerTest {
                 Collections.singletonList(config.mappingJackson2HttpMessageConverter()),
                 new FakeApplicationConfig().beanMapper()
         );
+    }
 
+    public void createWebClient(Object controller) {
         this.webClient = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(config.mappingJackson2HttpMessageConverter())
                 .setCustomArgumentResolvers(mockMvcBeanMapper.createHandlerMethodArgumentResolvers())

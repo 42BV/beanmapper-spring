@@ -37,6 +37,7 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
         Deencapsulation.setField(controller, "containingFakeService", containingFakeService);
         Deencapsulation.setField(controller, "beanMapper", beanMapper());
         registerRepository(fakeRepository, Fake.class);
+        createWebClient(controller);
 
         fake = new Fake();
         Deencapsulation.setField(fake, "id", 42L);
