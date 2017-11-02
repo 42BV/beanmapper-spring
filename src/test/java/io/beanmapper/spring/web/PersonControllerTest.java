@@ -278,7 +278,6 @@ public class PersonControllerTest extends AbstractSpringTest {
     }
 
     @Test
-    @Ignore("Needs to be part of a higher-level fix for dealing with collections")
     public void testPairWithCollection() throws Exception {
         Person person = new Person();
         person.setName("Henk");
