@@ -1,11 +1,12 @@
-# beanmapper-spring
-
 [![Build Status](https://travis-ci.org/42BV/beanmapper-spring.svg?branch=master)](https://travis-ci.org/42BV/beanmapper-spring)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1cd19a18411b4fab97a49af920d72af4)](https://www.codacy.com/app/42bv/beanmapper-spring)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.beanmapper/beanmapper-spring/badge.svg)](http://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
-[![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![BCH compliance](https://bettercodehub.com/edge/badge/42BV/beanmapper-spring?branch=master)](https://bettercodehub.com/)
+[![codecov](https://codecov.io/gh/42BV/beanmapper-spring/branch/master/graph/badge.svg)](https://codecov.io/gh/42BV/beanmapper-spring)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
+[![Javadocs](https://www.javadoc.io/badge/io.beanmapper/beanmapper-spring.svg)](https://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
+[![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
+# BeanMapper Spring
 
 ## Input merging argument resolver
 
