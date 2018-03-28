@@ -6,8 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.4.0] - 2018-03-28
 ### Added
-- Issue [#29](https://github.com/42BV/beanmapper-spring/issues/29); **Spring Security based implementation for @SecuredPropertyHandler** Added a Spring Security implementation for the @SecuredPropertyHandler. It will compare the Principal's authorities against the required authorities. At least one match will suffice to grant access.
+- Added an AbstractSpringSecuredCheck, which contains the logic for fetching the security Principal and checking against the roles. This class can be used to implement LogicSecuredCheck classes. See also [#107](https://github.com/42BV/beanmapper/issues/107)
+- Issue [#29](https://github.com/42BV/beanmapper-spring/issues/29); **Spring Security based implementation for @RoleSecuredCheck** Added a Spring Security implementation for the @BeanRoleSecured handler. It will compare the Principal's authorities against the required authorities. At least one match will suffice to grant access.
 
 ## [2.2.0] - 2017-11-01
 ### Added
