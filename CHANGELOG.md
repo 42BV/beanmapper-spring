@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.4.1] - 2018-06-20
+### Version upgrade
+- Adoption of underlying BeanMapper library v2.4.1
+
 ## [2.4.0] - 2018-03-28
 ### Added
 - Added an AbstractSpringSecuredCheck, which contains the logic for fetching the security Principal and checking against the roles. This class can be used to implement LogicSecuredCheck classes. See also [#107](https://github.com/42BV/beanmapper/issues/107)
