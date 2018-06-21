@@ -28,7 +28,7 @@ public class EntityFinderTest extends AbstractSpringTest {
 
             @Override
             public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
-                return personRepository.findOne(id);
+                return personRepository.findById(id).orElse(null);
             }
 
         };

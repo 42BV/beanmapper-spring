@@ -25,17 +25,13 @@ public class SpringDataEntityFinder implements EntityFinder {
     @Override
     @SuppressWarnings("unchecked")
     public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
-        CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass);
-        if (repository == null) {
-            throw new EntityNotFoundException(
-                    "No repository found for " + entityClass.getName());
-        }
-        Object entity = repository.findOne(id);
-        if (entity == null) {
-            throw new EntityNotFoundException(
-                    "Entity with ID " + id + "was not found in repository " + repository.getClass().getName());
-        }
-        return entity;
+        CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass).orElseThrow(() -> new EntityNotFoundException(
+                "No repository found for " + entityClass.getName())
+        );
+
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                        "Entity with ID " + id + "was not found in repository " + repository.getClass().getName())
+        );
     }
 
 }

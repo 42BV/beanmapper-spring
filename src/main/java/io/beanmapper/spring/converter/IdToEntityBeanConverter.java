@@ -2,6 +2,8 @@ package io.beanmapper.spring.converter;
 
 import java.io.Serializable;
 
+import javax.persistence.EntityNotFoundException;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.core.BeanFieldMatch;
 import io.beanmapper.core.converter.BeanConverter;
@@ -25,8 +27,11 @@ public class IdToEntityBeanConverter implements BeanConverter {
             return null;
         }
 
-        CrudRepository repository = (CrudRepository) repositories.getRepositoryFor(targetClass);
-        return repository.findOne((Serializable) source);
+        CrudRepository repository = (CrudRepository) repositories.getRepositoryFor(targetClass).orElseThrow(() -> new EntityNotFoundException(
+                "No repository found for " + targetClass.getName()
+        ));
+
+        return repository.findById(source).orElse(null);
     }
 
     /**

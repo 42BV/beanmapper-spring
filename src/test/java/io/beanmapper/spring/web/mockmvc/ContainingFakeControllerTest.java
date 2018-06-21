@@ -1,5 +1,7 @@
 package io.beanmapper.spring.web.mockmvc;
 
+import java.util.Optional;
+
 import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFake;
 import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFakeController;
 import io.beanmapper.spring.web.mockmvc.fakedomain.ContainingFakeForm;
@@ -50,8 +52,8 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     @Test
     public void create() throws Exception {
         new Expectations(){{
-            fakeRepository.findOne(42L);
-            result = fake;
+            fakeRepository.findById(42L);
+            result = Optional.ofNullable(fake);
 
             containingFakeService.create((ContainingFake) any);
             result = containingFake;
@@ -83,8 +85,8 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     @Test
     public void createThrowsValidationExceptionForMappedTarget() throws Exception {
         new Expectations(){{
-            fakeRepository.findOne(42L);
-            result = fake;
+            fakeRepository.findById(42L);
+            result = Optional.ofNullable(fake);
         }};
 
         ContainingFakeForm containingFakeForm = new ContainingFakeForm();
