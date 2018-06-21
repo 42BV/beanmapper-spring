@@ -1,5 +1,7 @@
 package io.beanmapper.spring.web.mockmvc;
 
+import java.util.Optional;
+
 import io.beanmapper.spring.web.mockmvc.fakedomain.Fake;
 import io.beanmapper.spring.web.mockmvc.fakedomain.FakeController;
 import io.beanmapper.spring.web.mockmvc.fakedomain.FakeForm;
@@ -42,8 +44,8 @@ public class FakeControllerTest extends AbstractControllerTest {
         fake.setName("Henk");
 
         new NonStrictExpectations() {{
-            fakeRepository.findOne(42L);
-            result = fake;
+            fakeRepository.findById(42L);
+            result = Optional.ofNullable(fake);
         }};
 
     }

@@ -20,7 +20,7 @@ public class MockIdToEntityBeanConverter implements BeanConverter {
 
     @Override
     public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanFieldMatch beanFieldMatch) {
-        return repository.findOne((Long)source);
+        return repository.findById((Long)source).orElse(null);
     }
 
     @Override

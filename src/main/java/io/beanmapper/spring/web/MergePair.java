@@ -40,7 +40,7 @@ public class MergePair<T> {
     }
 
     private void createBeforeMerge(Object source) {
-        setBeforeMerge(beanMapper.wrapConfig().build().map(source, targetEntityClass()));
+        setBeforeMerge(beanMapper.wrap().build().map(source, targetEntityClass()));
     }
 
     private Object findSource(Long id) {

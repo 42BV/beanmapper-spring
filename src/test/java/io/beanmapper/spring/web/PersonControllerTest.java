@@ -23,9 +23,7 @@ import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 import mockit.Mocked;
 import mockit.StrictExpectations;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -209,13 +207,13 @@ public class PersonControllerTest extends AbstractSpringTest {
         person.setStreet("Stationsplein");
         personRepository.save(person);
 
-        byte[] bytes = IOUtils.toByteArray("CAFEBABE");
+        byte[] bytes = "CAFEBABE".getBytes();
         MockMultipartFile photoPart = new MockMultipartFile("photo", "photo.jpeg", "image/jpeg", bytes);
         MockMultipartFile personPart = new MockMultipartFile("personForm", "", "application/json", "{\"name\":\"Jan\"}".getBytes());
 
         webClient.perform(
                     MockMvcRequestBuilders
-                        .fileUpload("/person/" + person.getId() + "/multipart")
+                        .multipart("/person/" + person.getId() + "/multipart")
                         .file(personPart)
                         .file(photoPart)
                 )
