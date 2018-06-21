@@ -21,7 +21,7 @@ public class MockEntityFinder implements EntityFinder {
             throw new RuntimeException("No constructor found for " + entityClass.getSimpleName() +
                     ". Make sure to register the class in addConverters.registerExpectation");
         }
-        return repository.findOne(id);
+        return repository.findById(id).orElse(null);
     }
 
     public void addRepository(CrudRepository<? extends Persistable, Long> repository, Class<?> entityClass) {

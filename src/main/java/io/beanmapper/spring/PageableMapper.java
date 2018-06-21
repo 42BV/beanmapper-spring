@@ -38,7 +38,7 @@ public class PageableMapper {
         } else {
             transformed = Collections.emptyList();
         }
-        Pageable pageable = new PageRequest(source.getNumber(), source.getSize(), source.getSort());
+        Pageable pageable = PageRequest.of(source.getNumber(), source.getSize(), source.getSort());
         return new PageImpl<T>(transformed, pageable, source.getTotalElements());
     }
 

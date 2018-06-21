@@ -14,7 +14,7 @@ public class MockEntityConverter<T extends Persistable> implements Converter<Str
 
     @Override
     public T convert(String id) {
-        return repository.findOne(Long.valueOf(id));
+        return repository.findById(Long.valueOf(id)).orElse(null);
     }
 
 }

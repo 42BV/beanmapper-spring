@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.Version;
@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 @ComponentScan(basePackageClasses = FakeApplicationConfig.class,
         includeFilters = @ComponentScan.Filter({ ControllerAdvice.class, Controller.class, RestController.class }),
         excludeFilters = @ComponentScan.Filter({ Configuration.class, Service.class, Repository.class }))
-public class FakeWebMvcConfig extends WebMvcConfigurerAdapter {
+public class FakeWebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private FormattingConversionService mvcConversionService;

@@ -169,7 +169,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         Set<String> propertyNames = getPropertyNames(form);
 
         // Modify the BeanMapper to deal with special situations
-        BeanMapperBuilder customBeanMapperBuilder = beanMapper.wrapConfig();
+        BeanMapperBuilder customBeanMapperBuilder = beanMapper.wrap();
         if (annotation.patch() && propertyNames != null) {
             customBeanMapperBuilder.downsizeSource(new ArrayList<>(propertyNames));
         }

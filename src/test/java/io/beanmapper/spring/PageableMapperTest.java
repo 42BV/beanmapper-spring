@@ -20,7 +20,7 @@ import org.springframework.data.domain.Sort;
 
 public class PageableMapperTest {
     
-    private final Pageable pageable = new PageRequest(0, 10, new Sort("id"));
+    private final Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
 
     private BeanMapper beanMapper;
 
