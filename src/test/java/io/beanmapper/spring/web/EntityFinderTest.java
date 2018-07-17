@@ -27,13 +27,18 @@ public class EntityFinderTest extends AbstractSpringTest {
         EntityFinder entityFinder = new EntityFinder() {
 
             @Override
-            public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
-                return personRepository.findById(id).orElse(null);
+            public <T> T find(Long id, Class<T> entityClass) throws EntityNotFoundException {
+                return (T)personRepository.findById(id).orElse(null);
+            }
+
+            @Override
+            public <T> T findAndDetach(Long id, Class<T> entityClass) throws EntityNotFoundException {
+                return find(id, entityClass);
             }
 
         };
 
-        Person foundPerson = (Person) entityFinder.find(person.getId(), Person.class);
+        Person foundPerson = entityFinder.find(person.getId(), Person.class);
         assertNotNull(foundPerson);
         assertEquals("Henk", foundPerson.getName());
     }

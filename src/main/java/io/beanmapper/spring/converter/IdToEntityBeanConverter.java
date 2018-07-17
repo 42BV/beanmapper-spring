@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.EntityNotFoundException;
 
 import io.beanmapper.BeanMapper;
-import io.beanmapper.core.BeanFieldMatch;
+import io.beanmapper.core.BeanPropertyMatch;
 import io.beanmapper.core.converter.BeanConverter;
 
 import org.springframework.context.ApplicationContext;
@@ -22,7 +22,7 @@ public class IdToEntityBeanConverter implements BeanConverter {
     }
     
     @Override
-    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanFieldMatch beanFieldMatch) {
+    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanPropertyMatch beanFieldMatch) {
         if (source == null) {
             return null;
         }

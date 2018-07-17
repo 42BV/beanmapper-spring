@@ -1,5 +1,6 @@
 package io.beanmapper.spring.web;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.context.ApplicationContext;
@@ -15,8 +16,21 @@ public class SpringDataEntityFinder implements EntityFinder {
 
     private final Repositories repositories;
 
-    public SpringDataEntityFinder(ApplicationContext applicationContext) {
+    private final EntityManager entityManager;
+
+    public SpringDataEntityFinder(ApplicationContext applicationContext, EntityManager entityManager) {
         this.repositories = new Repositories(applicationContext);
+        this.entityManager = entityManager;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> T findAndDetach(Long id, Class<T> entityClass) throws EntityNotFoundException {
+        T entity = find(id, entityClass);
+        entityManager.detach(entity);
+        return entity;
     }
 
     /**
@@ -24,13 +38,14 @@ public class SpringDataEntityFinder implements EntityFinder {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Object find(Long id, Class<?> entityClass) throws EntityNotFoundException {
-        CrudRepository<?, Long> repository = (CrudRepository<?, Long>) repositories.getRepositoryFor(entityClass).orElseThrow(() -> new EntityNotFoundException(
-                "No repository found for " + entityClass.getName())
+    public <T> T find(Long id, Class<T> entityClass) throws EntityNotFoundException {
+        CrudRepository<T, Long> repository =
+                (CrudRepository<T, Long>) repositories.getRepositoryFor(entityClass)
+                .orElseThrow(() -> new EntityNotFoundException("No repository found for " + entityClass.getName())
         );
 
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                        "Entity with ID " + id + "was not found in repository " + repository.getClass().getName())
+                "Entity with ID " + id + "was not found in repository " + repository.getClass().getName())
         );
     }
 

@@ -1,7 +1,7 @@
 package io.beanmapper.spring.web.mockmvc;
 
 import io.beanmapper.BeanMapper;
-import io.beanmapper.core.BeanFieldMatch;
+import io.beanmapper.core.BeanPropertyMatch;
 import io.beanmapper.core.converter.BeanConverter;
 
 import org.springframework.data.domain.Persistable;
@@ -19,7 +19,7 @@ public class MockIdToEntityBeanConverter implements BeanConverter {
     }
 
     @Override
-    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanFieldMatch beanFieldMatch) {
+    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanPropertyMatch beanFieldMatch) {
         return repository.findById((Long)source).orElse(null);
     }
 

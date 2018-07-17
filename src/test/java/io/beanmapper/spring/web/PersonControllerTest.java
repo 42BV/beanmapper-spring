@@ -76,7 +76,8 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
                         Arrays.<HttpMessageConverter<?>> asList(new StructuredJsonMessageConverter(converter)),
                         beanMapper,
-                        applicationContext))
+                        applicationContext,
+                        entityManager))
                 .setMessageConverters(converter)
                 .setConversionService(new FormattingConversionService())
                 .build();

@@ -23,7 +23,10 @@ public class MergePair<T> {
     }
 
     public void merge(Object source, Long id) {
-        T target = (T)findSource(id);
+        if (isMergePair()) {
+            setBeforeMerge(entityFinder.findAndDetach(id, targetEntityClass()));
+        }
+        T target = entityFinder.find(id, targetEntityClass());
         setAfterMerge(beanMapper.map(source, target));
     }
 
@@ -37,18 +40,6 @@ public class MergePair<T> {
 
     public Object result() {
         return isMergePair() ? this : getAfterMerge();
-    }
-
-    private void createBeforeMerge(Object source) {
-        setBeforeMerge(beanMapper.wrap().build().map(source, targetEntityClass()));
-    }
-
-    private Object findSource(Long id) {
-        Object entity = entityFinder.find(id, targetEntityClass());
-        if (isMergePair()) {
-            createBeforeMerge(entity);
-        }
-        return entity;
     }
 
     private boolean isMergePair() {

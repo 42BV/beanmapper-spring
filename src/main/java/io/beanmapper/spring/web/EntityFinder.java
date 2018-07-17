@@ -17,6 +17,17 @@ public interface EntityFinder {
      * @throws javax.persistence.EntityNotFoundException if the repository or the entity
      *         could not be found
      */
-    Object find(Long id, Class<?> entityClass) throws EntityNotFoundException;
+    <T> T find(Long id, Class<T> entityClass) throws EntityNotFoundException;
+
+    /**
+     * Returns the entity on the basis of the entity class and its ID bypassing the
+     * Hibernate cache
+     * @param entityClass the class of the entity
+     * @param id the ID of the entity
+     * @return the entity if found
+     * @throws javax.persistence.EntityNotFoundException if the repository or the entity
+     *         could not be found
+     */
+    <T> T findAndDetach(Long id, Class<T> entityClass) throws EntityNotFoundException;
 
 }
