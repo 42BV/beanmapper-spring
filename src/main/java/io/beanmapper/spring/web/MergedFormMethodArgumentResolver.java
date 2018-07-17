@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.Lazy;
@@ -44,8 +46,9 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,
                                             BeanMapper beanMapper, 
-                                            ApplicationContext applicationContext) {
-        this(messageConverters, beanMapper, new SpringDataEntityFinder(applicationContext));
+                                            ApplicationContext applicationContext,
+                                            EntityManager entityManager) {
+        this(messageConverters, beanMapper, new SpringDataEntityFinder(applicationContext, entityManager));
     }
 
     public MergedFormMethodArgumentResolver(List<HttpMessageConverter<?>> messageConverters,

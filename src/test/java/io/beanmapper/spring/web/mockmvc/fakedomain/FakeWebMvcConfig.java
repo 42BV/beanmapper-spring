@@ -3,6 +3,9 @@ package io.beanmapper.spring.web.mockmvc.fakedomain;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;
 
@@ -47,6 +50,9 @@ public class FakeWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(mappingJackson2HttpMessageConverter());
@@ -63,7 +69,8 @@ public class FakeWebMvcConfig implements WebMvcConfigurer {
         argumentResolvers.add(new MergedFormMethodArgumentResolver(
                 Collections.singletonList(mappingJackson2HttpMessageConverter()),
                 beanMapper,
-                applicationContext
+                applicationContext,
+                entityManager
         ));
     }
 
