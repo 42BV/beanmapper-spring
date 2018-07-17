@@ -18,7 +18,8 @@ public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentRes
     argumentResolvers.add(new MergeFormMethodArgumentResolver(
             Collections.singletonList(mappingJackson2HttpMessageConverter()),
             beanMapper,
-            applicationContext
+            applicationContext,
+            entityManager
     ));
 }
 ```

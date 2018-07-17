@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2018-07-17
 ### Version upgrade
 - Full upgrade to **Spring 5 / Spring Boot 2**. This version of BeanMapper Spring is no longer usable with lower versions.
 - Issue [#32](https://github.com/42BV/beanmapper-spring/issues/32); **MergePair.beforeMerge must be untouched, not BeanMapped** when a MergePair is used, the ```beforeMerge``` is now retrieved and immediately detached before the target is fetched. Take note that this means that the original's proxies can no longer be resolved. This restriction does not apply to the target.
