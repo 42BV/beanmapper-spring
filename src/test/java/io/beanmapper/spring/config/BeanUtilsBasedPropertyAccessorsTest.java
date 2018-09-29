@@ -6,15 +6,15 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class BeanUtilsBasedPropertyAccessorsTest {
 
     @Test
     public void testGetAll() {
         List<PropertyAccessor> props = new BeanUtilsBasedPropertyAccessors().getAll(Foo.class);
-        assertEquals(1, props.size());
-        assertEquals("setStrVal", props.get(0).getWriteMethod().getName());
+        //noinspection OptionalGetWithoutIsPresent - failure is expected if none found
+        PropertyAccessor strValProperty = props.stream().filter(prop -> prop.getName().equals("strVal")).findFirst().get();
+        assertEquals("setStrVal", strValProperty.getWriteMethod().getName());
     }
 
     static class Foo {

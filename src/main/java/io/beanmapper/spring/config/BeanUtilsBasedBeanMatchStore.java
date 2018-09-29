@@ -7,6 +7,7 @@ import io.beanmapper.core.unproxy.BeanUnproxy;
 
 public class BeanUtilsBasedBeanMatchStore extends BeanMatchStore {
 
+    @SuppressWarnings("WeakerAccess")
     public BeanUtilsBasedBeanMatchStore(CollectionHandlerStore collectionHandlerStore, BeanUnproxy beanUnproxy) {
         super(collectionHandlerStore, beanUnproxy);
     }

@@ -16,6 +16,7 @@ public class BeanUtilsBasedConfigBuilderTest {
 
     }
 
+    @SuppressWarnings({"SameParameterValue", "unused"})
     static class Foo {
         private String strVal;
 
@@ -23,16 +24,17 @@ public class BeanUtilsBasedConfigBuilderTest {
             return strVal;
         }
 
-        public Foo setStrVal(String strVal) {
+        Foo setStrVal(String strVal) {
             this.strVal = strVal;
             return this;
         }
     }
 
+    @SuppressWarnings("unused")
     public static class Bar {
         private String strVal;
 
-        public String getStrVal() {
+        String getStrVal() {
             return strVal;
         }
 
