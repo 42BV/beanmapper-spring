@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.1.0] - 2020-12-16
+### Owasp vulnerability dependency upgrade
+- Added owasp dependency check maven plugin to be able to check dependencies
+- Upgraded guava- and jackson deps to resolve owasp findings
+- Fixed maven surefire plugin setting to be able to run JMockit tests with Junit4
+- Removed travis build config; replaced with github actions CI
+
 ## [3.0.0] - 2018-07-17
 ### Version upgrade
 - Full upgrade to **Spring 5 / Spring Boot 2**. This version of BeanMapper Spring is no longer usable with lower versions.

@@ -56,19 +56,19 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <beanmapper.version>3.0.0</beanmapper.version>
+        <beanmapper.version>3.0.1</beanmapper.version>
         <commons.io.version>2.6</commons.io.version>
         <el.api.version>3.0.0</el.api.version>
         <el.impl.version>2.2</el.impl.version>
-        <guava.version>25.1-jre</guava.version>
+        <guava.version>30.1-jre</guava.version>
         <hibernate.version>5.3.1.Final</hibernate.version>
         <hsqldb.version>2.4.1</hsqldb.version>
-        <jackson.databind.version>2.9.6</jackson.databind.version>
+        <jackson.databind.version>2.12.0</jackson.databind.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <jmockit.version>1.17</jmockit.version>
         <jsonpath.version>2.4.0</jsonpath.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <slf4j.version>1.7.2</slf4j.version>
         <spring.version>5.0.7.RELEASE</spring.version>
         <spring.security.config.version>5.0.6.RELEASE</spring.security.config.version>
@@ -239,6 +239,16 @@
         <plugins>
 
             <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <version>1.6.7</version>
@@ -253,6 +263,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -325,7 +336,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.9</version>
+                <version>0.8.6</version>
                 <executions>
                     <execution>
                         <goals>
@@ -340,6 +351,20 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>6.0.3</version>
+                <configuration>
+                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                    <skipProvidedScope>true</skipProvidedScope>
+                    <skipTestScope>true</skipTestScope>
+                    <skipRuntimeScope>true</skipRuntimeScope>
+                    <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                    <suppressionFile>owasp-suppressions.xml</suppressionFile>
+                </configuration>
             </plugin>
 
         </plugins>
