@@ -71,7 +71,7 @@
         <jsonpath.version>2.4.0</jsonpath.version>
         <junit.version>4.13.1</junit.version>
         <slf4j.version>1.7.2</slf4j.version>
-        <spring.version>5.3.2</spring.version>
+        <spring.version>5.3.18</spring.version>
         <spring.security.config.version>5.0.6.RELEASE</spring.security.config.version>
         <spring.jpa.version>2.1.0.RELEASE</spring.jpa.version>
     </properties>
