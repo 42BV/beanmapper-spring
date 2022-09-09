@@ -70,9 +70,9 @@ public class ApplicationConfig {
     }
     
     @Bean
-    public JpaTransactionManager transactionManager() {
+    public JpaTransactionManager transactionManager(@Autowired LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
         return transactionManager;
     }
 
@@ -83,6 +83,7 @@ public class ApplicationConfig {
         return mapper;
     }
 
+    @Configuration
     public static class HsqlConfig {
         
         @Bean

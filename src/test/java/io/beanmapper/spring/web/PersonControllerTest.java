@@ -3,33 +3,38 @@
  */
 package io.beanmapper.spring.web;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
-import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.flusher.JpaAfterClearFlusher;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonRepository;
 import io.beanmapper.spring.model.Tag;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
-import mockit.Mocked;
-import mockit.StrictExpectations;
+import io.beanmapper.spring.web.mockmvc.AbstractControllerTest;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,15 +44,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class PersonControllerTest extends AbstractSpringTest {
- 
-    private MockMvc webClient;
+@ExtendWith(MockitoExtension.class)
+public class PersonControllerTest extends AbstractControllerTest {
 
     private BeanMapper beanMapper;
 
     private MappingJackson2HttpMessageConverter converter;
 
-    @Autowired
+    @InjectMocks
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -56,10 +60,10 @@ public class PersonControllerTest extends AbstractSpringTest {
     @Autowired
     private PersonRepository personRepository;
 
-    @Mocked
+    @Mock
     private EntityManager entityManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(objectMapper);
@@ -74,7 +78,7 @@ public class PersonControllerTest extends AbstractSpringTest {
     private MockMvc createWebClient(BeanMapper beanMapper) {
         return MockMvcBuilders.standaloneSetup(new PersonController())
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
-                        Arrays.<HttpMessageConverter<?>> asList(new StructuredJsonMessageConverter(converter)),
+                        List.of(new StructuredJsonMessageConverter(converter)),
                         beanMapper,
                         applicationContext,
                         entityManager))
@@ -150,7 +154,7 @@ public class PersonControllerTest extends AbstractSpringTest {
         Person person = new Person();
         person.setName("Henk");
         personRepository.save(person);
-        
+
         this.webClient.perform(MockMvcRequestBuilders.put("/person/" + person.getId() + "/lazy")
                 .content("{\"name\":\"Jan\"}")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -163,9 +167,7 @@ public class PersonControllerTest extends AbstractSpringTest {
     @Test
     public void testLazyTriggersFlush() throws Exception {
 
-        new StrictExpectations(){{
-            entityManager.flush();
-        }};
+        doNothing().when(entityManager).flush();
 
         JpaAfterClearFlusher flusher = new JpaAfterClearFlusher(entityManager);
 
@@ -186,6 +188,8 @@ public class PersonControllerTest extends AbstractSpringTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(person.getId().intValue()))
                 .andExpect(jsonPath("$.name").value("Jan"));
+
+        verify(entityManager, times(1)).flush();
     }
 
     @Test

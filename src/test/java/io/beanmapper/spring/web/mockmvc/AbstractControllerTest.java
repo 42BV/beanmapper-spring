@@ -3,19 +3,27 @@ package io.beanmapper.spring.web.mockmvc;
 import java.util.Collections;
 
 import io.beanmapper.BeanMapper;
+import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.web.mockmvc.fakedomain.FakeApplicationConfig;
 import io.beanmapper.spring.web.mockmvc.fakedomain.FakeWebMvcConfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-public class AbstractControllerTest {
+@AutoConfigureMockMvc
+@EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
+public class AbstractControllerTest extends AbstractSpringTest {
 
     private FakeWebMvcConfig config = new FakeWebMvcConfig();
 
+    @Autowired
     protected MockMvc webClient;
 
     protected MockMvcBeanMapper mockMvcBeanMapper;

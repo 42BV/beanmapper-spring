@@ -2,14 +2,15 @@ package io.beanmapper.spring;
 
 import javax.sql.DataSource;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * Base for Spring dependent tests.
@@ -17,15 +18,16 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @author Jeroen van Schagen
  * @since Aug 24, 2015
  */
-@WebAppConfiguration
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { ApplicationConfig.class })
+@SpringBootTest
 public abstract class AbstractSpringTest {
-    
+
+    @Mock
     private JdbcTemplate jdbcTemplate;
-    
-    @Before
-    @After
+
+    @AfterEach
     public void cleanUp() {
         jdbcTemplate.execute("TRUNCATE SCHEMA public AND COMMIT");
     }

@@ -1,5 +1,8 @@
 package io.beanmapper.spring.web.mockmvc.fakedomain;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class FakeService {
 
     public Fake read(Fake fake) {

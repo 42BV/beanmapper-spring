@@ -17,8 +17,7 @@ public class ContainingFakeController {
     @Autowired
     private ContainingFakeService containingFakeService;
 
-    @Autowired
-    private BeanMapper beanMapper;
+    public BeanMapper beanMapper;
 
     @RequestMapping(method = RequestMethod.POST)
     public ContainingFakeResult create(@MergedForm(value = ContainingFakeForm.class) ContainingFake containingFake) {

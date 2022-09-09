@@ -1,4 +1,4 @@
-package io.beanmapper.spring.security;
+package io.beanmapper.spring.exceptions;
 
 public class PrincipalIsNoInstanceOfUserDetailsException extends RuntimeException {
 

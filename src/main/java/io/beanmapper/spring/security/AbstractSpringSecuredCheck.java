@@ -1,5 +1,7 @@
 package io.beanmapper.spring.security;
 
+import io.beanmapper.spring.exceptions.PrincipalIsNoInstanceOfUserDetailsException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

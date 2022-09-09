@@ -21,6 +21,12 @@ import org.springframework.data.domain.Pageable;
  * @since Nov 13, 2015
  */
 public class PageableMapper {
+
+    /**
+     * Private constructor to hide the implicit public constructor of
+     * utility-class.
+     */
+    private PageableMapper() {}
     
     /**
      * Converts a page into the desired target type.
@@ -33,13 +39,13 @@ public class PageableMapper {
     public static <S, T> Page<T> map(Page<S> source, Class<T> targetClass, BeanMapper beanMapper) {
         List<T> transformed;
         if (source.hasContent()) {
-            List<S> content = new ArrayList<S>(source.getContent());
-            transformed = (List<T>) beanMapper.map(content, targetClass);
+            List<S> content = new ArrayList<>(source.getContent());
+            transformed = beanMapper.map(content, targetClass);
         } else {
             transformed = Collections.emptyList();
         }
         Pageable pageable = PageRequest.of(source.getNumber(), source.getSize(), source.getSort());
-        return new PageImpl<T>(transformed, pageable, source.getTotalElements());
+        return new PageImpl<>(transformed, pageable, source.getTotalElements());
     }
 
 }

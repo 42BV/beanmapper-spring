@@ -4,7 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 
-public class MockEntityConverter<T extends Persistable> implements Converter<String, T> {
+public class MockEntityConverter<T extends Persistable<Long>> implements Converter<String, T> {
 
     private final CrudRepository<T, Long> repository;
 
