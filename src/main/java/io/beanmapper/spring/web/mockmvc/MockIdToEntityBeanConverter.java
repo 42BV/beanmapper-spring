@@ -9,11 +9,11 @@ import org.springframework.data.repository.CrudRepository;
 
 public class MockIdToEntityBeanConverter implements BeanConverter {
 
-    private Class targetClass;
+    private final Class<?> targetClass;
 
-    private CrudRepository<? extends Persistable, Long> repository;
+    private final CrudRepository<? extends Persistable<Long>, Long> repository;
 
-    public MockIdToEntityBeanConverter(CrudRepository<? extends Persistable, Long> repository, Class targetClass) {
+    public MockIdToEntityBeanConverter(CrudRepository<? extends Persistable<Long>, Long> repository, Class<?> targetClass) {
         this.repository = repository;
         this.targetClass = targetClass;
     }

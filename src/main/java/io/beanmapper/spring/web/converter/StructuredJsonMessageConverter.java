@@ -20,6 +20,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.lang.NonNullApi;
 
 import com.google.common.io.CharStreams;
 
@@ -67,7 +68,7 @@ public class StructuredJsonMessageConverter implements HttpMessageConverter<Obje
      * {@inheritDoc}
      */
     @Override
-    public Object read(Class<? extends Object> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+    public Object read(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
         String json = CharStreams.toString(new InputStreamReader(inputMessage.getBody()));
         Object body = delegate.read(clazz, new StringHttpInputMessage(inputMessage.getHeaders(), json));
         Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, delegate.getObjectMapper());

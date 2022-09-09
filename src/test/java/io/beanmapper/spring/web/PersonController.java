@@ -10,6 +10,7 @@ import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonForm;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -44,7 +45,7 @@ public class PersonController {
         return person;
     }
 
-    @RequestMapping(value = "/{id}/lazy", method = RequestMethod.PUT)
+    @PutMapping("/{id}/lazy")
     @ResponseBody
     public Person updateLazy(@Valid @MergedForm(value = PersonForm.class, mergeId = "id") Lazy<Person> person) throws Exception {
         return person.get();

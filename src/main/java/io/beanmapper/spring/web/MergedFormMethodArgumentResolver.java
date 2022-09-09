@@ -15,12 +15,12 @@ import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.web.converter.StructuredBody;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -157,12 +157,12 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
 
     private Object getBody(Object form) {
         if (form == null) return null;
-        return form instanceof StructuredBody ? ((StructuredBody) form).getBody() : form;
+        return form instanceof StructuredBody structuredBody ? structuredBody.body() : form;
     }
 
     private Set<String> getPropertyNames(Object form) {
         if (form == null) return null;
-        return form instanceof StructuredBody ? ((StructuredBody) form).getPropertyNames() : null;
+        return form instanceof StructuredBody structuredBody ? structuredBody.propertyNames() : null;
     }
 
     private Object resolveEntity(
@@ -181,7 +181,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         }
         BeanMapper customBeanMapper = customBeanMapperBuilder.build();
 
-        final MergePair mergePair = new MergePair(customBeanMapper, entityFinder, entityClass, annotation);
+        final MergePair<?> mergePair = new MergePair<>(customBeanMapper, entityFinder, entityClass, annotation);
 
         if (id == null) {
             // Create a new entity using our form data
@@ -203,7 +203,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         private final Class<?> entityClass;
         private final MergedForm annotation;
         private final WebRequestParameters webRequestParameters;
-        
+
         public LazyResolveEntity(
                 Object form, Long id, Class<?> entityClass,
                 MergedForm annotation, WebRequestParameters webRequestParameters) {
@@ -213,7 +213,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
             this.annotation = annotation;
             this.webRequestParameters = webRequestParameters;
         }
-        
+
         /**
          * {@inheritDoc}
          */
@@ -221,7 +221,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
         public Object get() throws Exception {
             return resolveEntity(form, id, entityClass, annotation, webRequestParameters, FLUSH);
         }
-        
+
     }
 
 }

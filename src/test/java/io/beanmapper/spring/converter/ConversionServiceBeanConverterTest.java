@@ -3,9 +3,11 @@
  */
 package io.beanmapper.spring.converter;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 
@@ -21,7 +23,7 @@ public class ConversionServiceBeanConverterTest {
     
     private ConversionServiceBeanConverter beanConverter;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         conversionService = new DefaultConversionService();
         beanConverter = new ConversionServiceBeanConverter(conversionService);
@@ -29,12 +31,12 @@ public class ConversionServiceBeanConverterTest {
 
     @Test
     public void testCanConvert() {
-        Assert.assertTrue(beanConverter.match(String.class, Long.class));
+        assertTrue(beanConverter.match(String.class, Long.class));
     }
     
     @Test
     public void testConvert() {
-        Assert.assertEquals(Long.valueOf(1), beanConverter.convert(null, "1", Long.class, null));
+        assertEquals(Long.valueOf(1), beanConverter.convert(null, "1", Long.class, null));
     }
 
 }

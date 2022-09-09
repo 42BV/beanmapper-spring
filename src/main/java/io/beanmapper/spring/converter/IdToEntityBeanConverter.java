@@ -45,12 +45,8 @@ public class IdToEntityBeanConverter implements BeanConverter {
         if (!repositories.hasRepositoryFor(targetClass)) {
             return false;
         }
-        boolean match = false;
-        EntityInformation<Object, Serializable> information = repositories.getEntityInformationFor(targetClass);
-        if (information != null) {
-            match = sourceClass.equals(information.getIdType());
-        }
-        return match;
+        // No need for a null check. Repository#getEntityInformation fails if null.
+        return sourceClass.equals(repositories.getEntityInformationFor(targetClass).getIdType());
     }
 
 }

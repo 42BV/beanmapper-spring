@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Updated to Java 17
+- Updated dependencies to their most recent, stable versions
+- Rewrote tests to use JUnit 5, and Mockito, rather than JUnit 4 and JMockit
 
 ## [3.1.0] - 2020-12-16
 ### Owasp vulnerability dependency upgrade

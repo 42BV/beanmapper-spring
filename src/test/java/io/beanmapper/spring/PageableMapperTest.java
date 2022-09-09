@@ -3,6 +3,9 @@
  */
 package io.beanmapper.spring;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Arrays;
 
 import io.beanmapper.BeanMapper;
@@ -10,8 +13,7 @@ import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.model.Person;
 import io.beanmapper.spring.model.PersonForm;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -38,15 +40,15 @@ public class PageableMapperTest {
         Page<PersonForm> source = new PageImpl<PersonForm>(Arrays.asList(form), pageable, 1);
         Page<Person> target = PageableMapper.map(source, Person.class, beanMapper);
         
-        Assert.assertNotNull(target);
-        Assert.assertEquals(pageable.getPageNumber(), target.getNumber());
-        Assert.assertEquals(pageable.getPageSize(), target.getSize());
-        Assert.assertEquals(pageable.getSort(), target.getSort());
-        Assert.assertEquals(1, target.getTotalElements());
+        assertNotNull(target);
+        assertEquals(pageable.getPageNumber(), target.getNumber());
+        assertEquals(pageable.getPageSize(), target.getSize());
+        assertEquals(pageable.getSort(), target.getSort());
+        assertEquals(1, target.getTotalElements());
         
         Person person = target.getContent().get(0);
-        Assert.assertEquals(Person.class, person.getClass());
-        Assert.assertEquals("Henk", person.getName());
+        assertEquals(Person.class, person.getClass());
+        assertEquals("Henk", person.getName());
     }
     
     @Test
@@ -54,11 +56,11 @@ public class PageableMapperTest {
         Page<PersonForm> source = new PageImpl<PersonForm>(Arrays.<PersonForm> asList(), pageable, 0);
         Page<Person> target = PageableMapper.map(source, Person.class, beanMapper);
 
-        Assert.assertNotNull(target);
-        Assert.assertEquals(pageable.getPageNumber(), target.getNumber());
-        Assert.assertEquals(pageable.getPageSize(), target.getSize());
-        Assert.assertEquals(pageable.getSort(), target.getSort());
-        Assert.assertEquals(0, target.getTotalElements());
+        assertNotNull(target);
+        assertEquals(pageable.getPageNumber(), target.getNumber());
+        assertEquals(pageable.getPageSize(), target.getSize());
+        assertEquals(pageable.getSort(), target.getSort());
+        assertEquals(0, target.getTotalElements());
     }
 
 }
