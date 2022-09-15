@@ -300,6 +300,11 @@
                     <!-- Fixes release commit creation on systems which are not in English -->
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-api</artifactId>
+                        <version>1.13.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
                         <artifactId>maven-scm-provider-gitexe</artifactId>
                         <version>1.13.0</version>
                     </dependency>
