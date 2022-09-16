@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Issue [138](https://github.com/42BV/beanmapper/issues/138), **Beanmapper wrongfully assumes a HibernateProxy is there when you use an inner class**; Properly checking whether nested/inner class implements HibernateProxy fixes the problem where the HibernateAwareBeanUnproxy would attempt to return a non-existent interface.
+
+## [4.0.0] - 2022-09-15
 ### Changed
 - Updated to Java 17
 - Updated dependencies to their most recent, stable versions
