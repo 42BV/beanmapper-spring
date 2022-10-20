@@ -22,7 +22,7 @@ public class IdToEntityBeanConverter implements BeanConverter {
     }
     
     @Override
-    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanPropertyMatch beanFieldMatch) {
+    public <S, T> T convert(BeanMapper beanMapper, S source, Class<T> targetClass, BeanPropertyMatch beanFieldMatch) {
         if (source == null) {
             return null;
         }
@@ -31,7 +31,7 @@ public class IdToEntityBeanConverter implements BeanConverter {
                 "No repository found for " + targetClass.getName()
         ));
 
-        return repository.findById(source).orElse(null);
+        return targetClass.cast(repository.findById(source).orElse(null));
     }
 
     /**

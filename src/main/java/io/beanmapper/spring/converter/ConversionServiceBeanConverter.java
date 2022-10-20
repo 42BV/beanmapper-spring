@@ -32,7 +32,7 @@ public class ConversionServiceBeanConverter implements BeanConverter {
     }
 
     @Override
-    public Object convert(BeanMapper beanMapper, Object source, Class<?> targetClass, BeanPropertyMatch beanFieldMatch) {
+    public <S, T> T convert(BeanMapper beanMapper, S source, Class<T> targetClass, BeanPropertyMatch beanFieldMatch) {
         return conversionService.convert(source, targetClass);
     }
 
