@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Updated
+- Updated hibernate-entitymanager to version 5.6.12.Final
+- Updated jackson-databind to version 2.14.0-rc2
+- Updated slf4j to version 2.0.3
+- Updated spring-version to 5.3.22
+- Updated spring-jpa to version 2.7.5
+
+### Changed
+- Changed artifactId slf4j-log4j12 to slf4j-reload4j, due to move.
 
 ## [4.0.1] - 2022-09-22
 ### Updated
