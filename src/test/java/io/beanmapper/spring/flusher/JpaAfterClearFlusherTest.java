@@ -3,7 +3,7 @@ package io.beanmapper.spring.flusher;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;

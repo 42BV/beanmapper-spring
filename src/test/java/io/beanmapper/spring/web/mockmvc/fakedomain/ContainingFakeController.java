@@ -1,6 +1,6 @@
 package io.beanmapper.spring.web.mockmvc.fakedomain;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedForm;

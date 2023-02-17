@@ -1,6 +1,6 @@
 package io.beanmapper.spring.web.mockmvc.fakedomain;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class ContainingFake {
 

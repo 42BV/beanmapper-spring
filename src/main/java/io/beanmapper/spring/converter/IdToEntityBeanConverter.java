@@ -2,7 +2,7 @@ package io.beanmapper.spring.converter;
 
 import java.io.Serializable;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.core.BeanPropertyMatch;

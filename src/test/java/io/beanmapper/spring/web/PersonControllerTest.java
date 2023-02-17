@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;

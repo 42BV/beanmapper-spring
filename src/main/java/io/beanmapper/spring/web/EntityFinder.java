@@ -1,6 +1,6 @@
 package io.beanmapper.spring.web;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * Provides a generic interface for custom entity finders. The entity finder is
@@ -14,7 +14,7 @@ public interface EntityFinder {
      * @param entityClass the class of the entity
      * @param id the ID of the entity
      * @return the entity if found
-     * @throws javax.persistence.EntityNotFoundException if the repository or the entity
+     * @throws jakarta.persistence.EntityNotFoundException if the repository or the entity
      *         could not be found
      */
     <T> T find(Long id, Class<T> entityClass) throws EntityNotFoundException;
@@ -25,7 +25,7 @@ public interface EntityFinder {
      * @param entityClass the class of the entity
      * @param id the ID of the entity
      * @return the entity if found
-     * @throws javax.persistence.EntityNotFoundException if the repository or the entity
+     * @throws jakarta.persistence.EntityNotFoundException if the repository or the entity
      *         could not be found
      */
     <T> T findAndDetach(Long id, Class<T> entityClass) throws EntityNotFoundException;

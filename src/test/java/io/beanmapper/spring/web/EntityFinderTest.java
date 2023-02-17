@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import io.beanmapper.spring.AbstractSpringTest;
 import io.beanmapper.spring.model.Person;
