@@ -1,6 +1,6 @@
 package io.beanmapper.spring.flusher;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import io.beanmapper.config.AfterClearFlusher;
 

@@ -3,7 +3,7 @@ package io.beanmapper.spring.web.mockmvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import io.beanmapper.exceptions.BeanConstructException;
 import io.beanmapper.spring.exceptions.ClassExpectationNotRegisteredException;

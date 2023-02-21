@@ -3,13 +3,7 @@
  */
 package io.beanmapper.spring;
 
-import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -28,12 +22,18 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
-@ComponentScan(basePackageClasses = ApplicationConfig.class,
-        excludeFilters = {
-                @ComponentScan.Filter({ ControllerAdvice.class, Controller.class, RestController.class })
-        })
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
+
+@ComponentScan(
+    basePackageClasses = ApplicationConfig.class,
+    excludeFilters = {
+        @ComponentScan.Filter({ ControllerAdvice.class, Controller.class, RestController.class })
+    }
+)
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackageClasses = ApplicationConfig.class)
 @Configuration

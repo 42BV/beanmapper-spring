@@ -1,7 +1,7 @@
 package io.beanmapper.spring.web;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;

@@ -3,8 +3,8 @@ package io.beanmapper.spring.web.mockmvc.fakedomain;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;

@@ -3,7 +3,7 @@
  */
 package io.beanmapper.spring.web;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.model.Person;

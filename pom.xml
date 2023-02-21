@@ -3,16 +3,16 @@
 
     <groupId>io.beanmapper</groupId>
     <artifactId>beanmapper-spring</artifactId>
-    <version>4.1.2-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>42 Bean Mapper Spring Support</name>
     <description>Spring support for the Bean Mapper</description>
     <inceptionYear>2015</inceptionYear>
-    <url>http://www.42.nl</url>
+    <url>https://www.42.nl</url>
 
     <organization>
         <name>42 BV</name>
-        <url>http://blog.42.nl/</url>
+        <url>https://www.42.nl</url>
     </organization>
 
     <licenses>
@@ -61,12 +61,13 @@
         <el.api.version>3.0.0</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
         <guava.version>31.1-jre</guava.version>
-        <hibernate.version>5.6.11.Final</hibernate.version>
-        <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
+        <hibernate.version>6.1.6.Final</hibernate.version>
+        <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
         <hsqldb.version>2.7.1</hsqldb.version>
         <jackson.databind.version>2.14.0</jackson.databind.version>
-        <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
-        <javax.servlet.version>4.0.1</javax.servlet.version>
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
+        <jakarta.validation.version>3.0.2</jakarta.validation.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
         <mockito.jupiter.version>4.8.0</mockito.jupiter.version>
         <jsonpath.version>2.7.0</jsonpath.version>
         <jupiter.engine.version>5.9.0</jupiter.engine.version>
@@ -74,10 +75,10 @@
         <heph.version>2.0.1</heph.version>
         <jakarta.annotations.version>2.1.1</jakarta.annotations.version>
         <slf4j.version>2.0.0</slf4j.version>
-        <spring.version>5.3.22</spring.version>
-        <spring.boot.version>2.7.3</spring.boot.version>
-        <spring.security.config.version>5.7.3</spring.security.config.version>
-        <spring.jpa.version>2.7.2</spring.jpa.version>
+        <spring.version>6.0.4</spring.version>
+        <spring.boot.version>3.0.2</spring.boot.version>
+        <spring.security.config.version>6.0.1</spring.security.config.version>
+        <spring.jpa.version>3.0.1</spring.jpa.version>
     </properties>
 
     <dependencies>
@@ -125,6 +126,12 @@
 
         <!-- ORM -->
         <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>${jakarta.persistence.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring.jpa.version}</version>
@@ -138,7 +145,7 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
+            <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -151,9 +158,9 @@
         
         <!-- Servlets -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet.version}</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
         
@@ -216,9 +223,9 @@
 
         <!-- Bean validation -->
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax.validation.api.version}</version>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -264,12 +271,10 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
             </plugin>
-
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>

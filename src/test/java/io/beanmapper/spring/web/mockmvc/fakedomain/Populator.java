@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Populator {
 
-    private FakeBuilder fakeBuilder;
+    private final FakeBuilder fakeBuilder;
+
+    public Populator(FakeBuilder fakeBuilder) {
+        this.fakeBuilder = fakeBuilder;
+    }
 
     @PostConstruct
     public void initData() {
