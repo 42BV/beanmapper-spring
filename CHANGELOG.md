@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Updated
+- Updated Guava to version 32.0.0-jre, due to CVE.
+
+## [4.1.1] - 2023-05-08
+### Updated 
+- Updated BeanMapper to version 4.1.2
+- Updated artifactId for slf4j-log4j12 to slf4j-reload4j
+- Updated OWASP Dependency Check to version 8.2.1
 
 ## [4.1.0] - 2022-11-10
 ### Updated 
