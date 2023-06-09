@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 ### Updated
+- Updated StructuredJsonMessageConverter, removing the dependency on Guava.
+
+## [4.1.3]
+### Updated
 - Updated Guava to version 32.0.0-jre, due to CVE.
+
+## [4.1.2]
 
 ## [4.1.1] - 2023-05-08
 ### Updated 
