@@ -77,7 +77,7 @@
         <slf4j.version>2.0.0</slf4j.version>
         <spring.version>6.0.8</spring.version>
         <spring.boot.version>3.0.2</spring.boot.version>
-        <spring.security.config.version>6.0.5</spring.security.config.version>
+        <spring.security.config.version>6.0.7</spring.security.config.version>
         <spring.jpa.version>3.0.1</spring.jpa.version>
     </properties>
 
