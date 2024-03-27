@@ -3,7 +3,7 @@
 
     <groupId>io.beanmapper</groupId>
     <artifactId>beanmapper-spring</artifactId>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>5.0.2</version>
     <packaging>jar</packaging>
     <name>42 Bean Mapper Spring Support</name>
     <description>Spring support for the Bean Mapper</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:git@github.com:42BV/beanmapper-spring.git</connection>
         <developerConnection>scm:git:git@github.com:42BV/beanmapper-spring.git</developerConnection>
         <url>https://github.com/42BV/beanmapper-spring</url>
-        <tag>HEAD</tag>
+        <tag>beanmapper-spring-5.0.2</tag>
     </scm>
 
     <developers>
