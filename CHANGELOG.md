@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [5.0.2] - 2024-03-27
+
+### Updated
+
+- Updated BeanMapper (4.1.3)
+- Updated jackson-core (2.17.0)
+- Updated jackson-databind (2.17.0)
+
+## [5.0.0] - 2023-02-22
+
 ### Updated
 
 - Updated BeanMapper (4.1.2)
