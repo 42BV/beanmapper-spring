@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [5.0.3] - 2024-04-04
+
+### Updated
+
+- Updated BeanMapper (4.1.4)
+
 ## [5.0.2] - 2024-03-27
 
 ### Updated
