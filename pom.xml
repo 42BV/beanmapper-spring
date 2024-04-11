@@ -56,7 +56,7 @@
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <beanmapper.version>4.1.4</beanmapper.version>
+        <beanmapper.version>4.1.5</beanmapper.version>
         <commons.lang.version>3.12.0</commons.lang.version>
         <el.api.version>3.0.0</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
