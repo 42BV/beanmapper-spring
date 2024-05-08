@@ -56,20 +56,20 @@
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <beanmapper.version>4.1.5</beanmapper.version>
-        <commons.lang.version>3.12.0</commons.lang.version>
-        <el.api.version>3.0.0</el.api.version>
+        <beanmapper.version>4.1.6</beanmapper.version>
+        <commons.lang.version>3.14.0</commons.lang.version>
+        <el.api.version>5.0.1</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
-        <guava.version>32.0.0-jre</guava.version>
-        <hibernate.version>6.1.6.Final</hibernate.version>
-        <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
-        <hsqldb.version>2.7.1</hsqldb.version>
+        <guava.version>33.1.0-jre</guava.version>
+        <hibernate.version>6.4.4.Final</hibernate.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <hsqldb.version>2.7.2</hsqldb.version>
         <jackson.core.version>2.17.0</jackson.core.version>
         <jackson.databind.version>2.17.0</jackson.databind.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
         <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-        <mockito.jupiter.version>4.8.0</mockito.jupiter.version>
+        <mockito.jupiter.version>5.11.0</mockito.jupiter.version>
         <jsonpath.version>2.7.0</jsonpath.version>
         <jupiter.engine.version>5.9.0</jupiter.engine.version>
         <jupiter.api.version>5.9.0</jupiter.api.version>
@@ -241,8 +241,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
             <version>${el.api.version}</version>
             <scope>test</scope>
         </dependency>
@@ -297,7 +297,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -375,7 +375,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <goals>
