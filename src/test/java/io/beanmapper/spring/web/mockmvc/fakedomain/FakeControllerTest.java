@@ -16,24 +16,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class FakeControllerTest extends AbstractControllerTest {
+class FakeControllerTest extends AbstractControllerTest {
 
     @InjectMocks
     private FakeController controller;
 
-    @MockBean
+    @MockitoBean
     private FakeService service;
 
-    @MockBean
+    @MockitoBean
     private FakeRepository repository;
 
     @Autowired
@@ -47,7 +47,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     private MappingJackson2HttpMessageConverter converter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(objectMapper);
 
@@ -55,7 +55,7 @@ public class FakeControllerTest extends AbstractControllerTest {
                 .addPackagePrefix(ApplicationConfig.class)
                 .build();
 
-        // Made it public due to problems with AutoWire.
+        // Made it due to problems with AutoWire.
         controller.beanMapper = beanMapper;
 
         initWebClient(controller);
@@ -66,7 +66,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void find() throws Exception {
+    void find() throws Exception {
         when(this.service.read(any())).thenReturn(this.fakeBuilder.base().withId(42L).withName("Henk").construct());
 
         this.webClient.perform(MockMvcRequestBuilders.get("/fake/42")
@@ -79,7 +79,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         when(service.create(any())).thenAnswer(i -> {
             Fake fake = (Fake) i.getArguments()[0];
             fake.setId(42L);
@@ -100,7 +100,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void update() throws Exception {
+    void update() throws Exception {
         when(this.service.update(any())).thenAnswer(i -> i.getArguments()[0]);
 
         FakeForm fakeForm = new FakeForm();
@@ -116,7 +116,7 @@ public class FakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void delete() throws Exception {
+    void delete() throws Exception {
         when(this.service.delete(any())).thenAnswer(i -> i.getArguments()[0]);
 
         this.webClient.perform(MockMvcRequestBuilders.delete("/fake/42")

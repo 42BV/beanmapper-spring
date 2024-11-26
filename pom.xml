@@ -53,33 +53,33 @@
     </distributionManagement>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <beanmapper.version>4.1.6</beanmapper.version>
-        <commons.lang.version>3.14.0</commons.lang.version>
-        <el.api.version>5.0.1</el.api.version>
+        <beanmapper.version>6.0.0</beanmapper.version>
+        <commons.lang.version>3.17.0</commons.lang.version>
+        <el.api.version>6.0.1</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
-        <guava.version>33.1.0-jre</guava.version>
+        <guava.version>33.3.1-jre</guava.version>
         <hibernate.version>6.4.4.Final</hibernate.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <hsqldb.version>2.7.2</hsqldb.version>
-        <jackson.core.version>2.17.0</jackson.core.version>
-        <jackson.databind.version>2.17.0</jackson.databind.version>
+        <hsqldb.version>2.7.4</hsqldb.version>
+        <jackson.core.version>2.18.1</jackson.core.version>
+        <jackson.databind.version>2.18.1</jackson.databind.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <jakarta.validation.version>3.0.2</jakarta.validation.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-        <mockito.jupiter.version>5.11.0</mockito.jupiter.version>
-        <jsonpath.version>2.7.0</jsonpath.version>
-        <jupiter.engine.version>5.9.0</jupiter.engine.version>
-        <jupiter.api.version>5.9.0</jupiter.api.version>
+        <jakarta.validation.version>3.1.0</jakarta.validation.version>
+        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
+        <mockito.jupiter.version>5.14.2</mockito.jupiter.version>
+        <jsonpath.version>2.9.0</jsonpath.version>
+        <jupiter.engine.version>5.11.3</jupiter.engine.version>
+        <jupiter.api.version>5.11.3</jupiter.api.version>
         <heph.version>2.0.1</heph.version>
-        <jakarta.annotations.version>2.1.1</jakarta.annotations.version>
-        <slf4j.version>2.0.0</slf4j.version>
-        <spring.version>6.0.8</spring.version>
-        <spring.boot.version>3.0.2</spring.boot.version>
-        <spring.security.config.version>6.0.5</spring.security.config.version>
-        <spring.jpa.version>3.0.1</spring.jpa.version>
+        <jakarta.annotations.version>3.0.0</jakarta.annotations.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <spring.version>6.2.0</spring.version>
+        <spring.boot.version>3.4.0</spring.boot.version>
+        <spring.security.config.version>6.4.1</spring.security.config.version>
+        <spring.jpa.version>3.4.0</spring.jpa.version>
     </properties>
 
     <dependencies>
@@ -279,13 +279,13 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.5.2</version>
             </plugin>
 
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <version>1.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>sonatype-nexus-staging</serverId>
@@ -307,18 +307,18 @@
 
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.1.1</version>
                 <dependencies>
                     <!-- Fixes release commit creation on systems which are not in English -->
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
                         <artifactId>maven-scm-api</artifactId>
-                        <version>1.13.0</version>
+                        <version>2.1.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
                         <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.13.0</version>
+                        <version>2.1.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -326,13 +326,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.3</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.11.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -346,7 +346,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -360,7 +360,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.7</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -395,7 +395,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>7.2.1</version>
+                <version>11.1.0</version>
                 <configuration>
                     <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
                     <skipProvidedScope>true</skipProvidedScope>

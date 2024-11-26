@@ -18,21 +18,21 @@ import io.beanmapper.spring.web.mockmvc.fakedomain.FakeWebMvcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class ContainingFakeControllerTest extends AbstractControllerTest {
+class ContainingFakeControllerTest extends AbstractControllerTest {
 
     @InjectMocks
     private ContainingFakeController controller;
 
-    @MockBean
+    @MockitoBean
     private FakeRepository fakeRepository;
 
-    @MockBean
+    @MockitoBean
     private ContainingFakeService containingFakeService;
 
     private Fake fake;
@@ -40,7 +40,7 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     private ContainingFake containingFake;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         controller.beanMapper = new BeanMapperBuilder()
                 .addPackagePrefix(ApplicationConfig.class)
                 .build();
@@ -56,7 +56,7 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         when(this.fakeRepository.findById(42L)).thenReturn(Optional.ofNullable(this.fake));
         when(containingFakeService.create(any())).thenAnswer(i -> {
             ContainingFake fake = (ContainingFake) i.getArguments()[0];
@@ -76,7 +76,7 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void createThrowsValidationExceptionForForm() throws Exception {
+    void createThrowsValidationExceptionForForm() throws Exception {
         ContainingFakeForm containingFakeForm = new ContainingFakeForm();
         containingFakeForm.fakeId = 42L;
 
@@ -88,7 +88,7 @@ public class ContainingFakeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void createThrowsValidationExceptionForMappedTarget() throws Exception {
+    void createThrowsValidationExceptionForMappedTarget() throws Exception {
         ContainingFakeForm containingFakeForm = new ContainingFakeForm();
         containingFakeForm.fakeId = 42L;
         containingFakeForm.passMe = "somevalue";

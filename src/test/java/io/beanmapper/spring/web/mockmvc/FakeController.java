@@ -27,7 +27,7 @@ public class FakeController {
     public BeanMapper beanMapper;
 
     @GetMapping(value = "/{fake}")
-    public FakeResult read(@PathVariable Fake fake) {
+    public FakeResult read(@PathVariable("fake") Fake fake) {
         return beanMapper.map(fakeService.read(fake), FakeResult.class);
     }
 
@@ -42,7 +42,7 @@ public class FakeController {
     }
 
     @DeleteMapping(value = "/{fake}")
-    public FakeResult delete(@PathVariable Fake fake) {
+    public FakeResult delete(@PathVariable("fake") Fake fake) {
         return beanMapper.map(fakeService.delete(fake), FakeResult.class);
     }
 

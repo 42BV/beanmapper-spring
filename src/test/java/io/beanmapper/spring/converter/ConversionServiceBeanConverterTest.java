@@ -17,25 +17,25 @@ import org.springframework.core.convert.support.DefaultConversionService;
  * @author Jeroen van Schagen
  * @since Jun 18, 2015
  */
-public class ConversionServiceBeanConverterTest {
+class ConversionServiceBeanConverterTest {
     
     private ConversionService conversionService;
     
     private ConversionServiceBeanConverter beanConverter;
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         conversionService = new DefaultConversionService();
         beanConverter = new ConversionServiceBeanConverter(conversionService);
     }
 
     @Test
-    public void testCanConvert() {
+    void testCanConvert() {
         assertTrue(beanConverter.match(String.class, Long.class));
     }
     
     @Test
-    public void testConvert() {
+    void testConvert() {
         assertEquals(Long.valueOf(1), beanConverter.convert(null, "1", Long.class, null));
     }
 
