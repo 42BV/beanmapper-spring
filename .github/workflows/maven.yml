@@ -11,7 +11,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: 42BV/42-github-workflows/.github/workflows/maven-test.yml@main
+    uses: 42BV/42-github-workflows/.github/workflows/maven-test.yml@feature/purge_nvd_cache
     with:
       java-version: 17
     secrets: inherit
