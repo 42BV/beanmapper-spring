@@ -4,7 +4,7 @@
 package io.beanmapper.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.cfg.ImprovedNamingStrategy;
+
 import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,19 +57,24 @@ public class ApplicationConfig {
         jpaVendorAdapter.setGenerateDdl(false);
         jpaVendorAdapter.setDatabasePlatform(hibernateDialect);
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
-        
-        Map<String, Object> jpaProperties = new HashMap<String, Object>();
-        jpaProperties.put("hibernate.ejb.naming_strategy", ImprovedNamingStrategy.class.getName());
+
+        Map<String, Object> jpaProperties = getHibernatePropertyMap();
+        entityManagerFactoryBean.setJpaPropertyMap(jpaProperties);
+        entityManagerFactoryBean.setEntityManagerFactoryInterface(EntityManagerFactory.class);
+
+        return entityManagerFactoryBean;
+    }
+
+    private Map<String, Object> getHibernatePropertyMap() {
+        Map<String, Object> jpaProperties = new HashMap<>();
         jpaProperties.put("hibernate.dialect", hibernateDialect);
         jpaProperties.put("hibernate.hbm2ddl.auto", "create-drop");
         jpaProperties.put("hibernate.jdbc.use_get_generated_keys", true);
         jpaProperties.put("hibernate.id.new_generator_mappings", true);
         jpaProperties.put("hibernate.generate_statistics", false);
-        
-        entityManagerFactoryBean.setJpaPropertyMap(jpaProperties);
-        return entityManagerFactoryBean;
+        return jpaProperties;
     }
-    
+
     @Bean
     public JpaTransactionManager transactionManager(@Autowired LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
