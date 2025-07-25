@@ -54,19 +54,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <beanmapper.version>6.0.0</beanmapper.version>
-        <commons.lang.version>3.17.0</commons.lang.version>
+        <commons.lang.version>3.18.0</commons.lang.version>
         <el.api.version>6.0.1</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
         <guava.version>33.3.1-jre</guava.version>
         <hibernate.version>6.4.4.Final</hibernate.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <hsqldb.version>2.7.4</hsqldb.version>
-        <jackson.core.version>2.18.1</jackson.core.version>
-        <jackson.databind.version>2.18.1</jackson.databind.version>
-        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <jakarta.validation.version>3.1.0</jakarta.validation.version>
+        <jackson.core.version>2.19.2</jackson.core.version>
+        <jackson.databind.version>2.19.2</jackson.databind.version>
+        <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
+        <jakarta.validation.version>3.1.1</jakarta.validation.version>
         <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
-        <mockito.jupiter.version>5.14.2</mockito.jupiter.version>
+        <mockito.jupiter.version>5.18.0</mockito.jupiter.version>
         <jsonpath.version>2.9.0</jsonpath.version>
         <jupiter.engine.version>5.11.3</jupiter.engine.version>
         <jupiter.api.version>5.11.3</jupiter.api.version>
@@ -74,10 +74,13 @@
         <jakarta.annotations.version>3.0.0</jakarta.annotations.version>
         <slf4j.version>2.0.16</slf4j.version>
         <spring.version>6.2.0</spring.version>
-        <spring.boot.version>3.4.0</spring.boot.version>
-        <spring.security.config.version>6.4.1</spring.security.config.version>
-        <spring.jpa.version>3.4.0</spring.jpa.version>
-        <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
+        <spring.boot.version>3.5.3</spring.boot.version>
+        <spring.security.config.version>6.5.2</spring.security.config.version>
+        <spring.jpa.version>3.5.2</spring.jpa.version>
+        <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -277,7 +280,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
 
             <plugin>
@@ -294,7 +297,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.7.0</version>
+                <version>${central-publishing-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
@@ -347,7 +350,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
