@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @since Nov 13, 2015
  */
 public class JsonUtil {
-    
+
     /**
      * Retrieve the property names mentioned in a JSON content.
-     * 
+     *
      * @param json the JSON content
      * @param objectMapper the object mapper
      * @return set of the property names
@@ -33,17 +31,21 @@ public class JsonUtil {
             throw new IllegalStateException("Could not retrieve property names from JSON.", e);
         }
     }
-    
+
     private static Set<String> getPropertyNames(JsonNode node, String base) {
         Set<String> propertyNames = new HashSet<>();
         Iterator<String> iterator = node.fieldNames();
         while (iterator.hasNext()) {
             String fieldName = iterator.next();
-            String propertyName = StringUtils.isEmpty(base) ? fieldName : base + "." + fieldName;
+
+            String propertyName = isEmpty(base) ? fieldName : base + "." + fieldName;
             propertyNames.add(propertyName);
             propertyNames.addAll(getPropertyNames(node.get(fieldName), propertyName));
         }
         return propertyNames;
     }
 
+    private static boolean isEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
 }

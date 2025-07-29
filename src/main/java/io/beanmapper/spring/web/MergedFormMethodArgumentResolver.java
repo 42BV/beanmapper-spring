@@ -15,7 +15,6 @@ import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.Lazy;
 import io.beanmapper.spring.web.converter.StructuredBody;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -134,7 +133,7 @@ public class MergedFormMethodArgumentResolver extends AbstractMessageConverterMe
     }
 
     private Long resolveId(NativeWebRequest webRequest, String mergeId) {
-        if (StringUtils.isEmpty(mergeId)) {
+        if(mergeId == null || mergeId.isEmpty()) {
             return null;
         }
 
