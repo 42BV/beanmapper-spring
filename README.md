@@ -15,7 +15,7 @@
 @Override
 public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
     argumentResolvers.add(new MergeFormMethodArgumentResolver(
-            Collections.singletonList(mappingJackson2HttpMessageConverter()),
+            Collections.singletonList(mappingJacksonHttpMessageConverter()),
             beanMapper,
             applicationContext,
             entityManager
@@ -65,12 +65,12 @@ public abstract class AbstractControllerTest {
 
         this.mockMvcBeanMapper = new MockMvcBeanMapper(
                 new FormattingConversionService(),
-                Collections.singletonList(config.mappingJackson2HttpMessageConverter()),
+                Collections.singletonList(config.mappingJacksonHttpMessageConverter()),
                 new ApplicationConfig().beanMapper()
         );
 
         this.webClient = MockMvcBuilders.standaloneSetup(controller)
-                .setMessageConverters(config.mappingJackson2HttpMessageConverter())
+                .setMessageConverters(config.mappingJacksonHttpMessageConverter())
                 .setCustomArgumentResolvers(mockMvcBeanMapper.createHandlerMethodArgumentResolvers())
                 .setConversionService(mockMvcBeanMapper.getConversionService())
                 .build();

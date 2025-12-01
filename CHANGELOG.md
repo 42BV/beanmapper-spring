@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [7.0.0] - 2025-12-01
+
+- Upgraded to Spring 7 and Jackson 3
+
 ## [5.0.4] - 2024-04-11
 
 ### Updated
