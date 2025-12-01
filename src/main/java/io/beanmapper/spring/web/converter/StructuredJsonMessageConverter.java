@@ -3,10 +3,11 @@
  */
 package io.beanmapper.spring.web.converter;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 
@@ -20,9 +21,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.lang.NonNullApi;
-
-import com.google.common.io.CharStreams;
 
 /**
  * Wraps the default Jackson2 message converter with read
@@ -69,7 +67,7 @@ public class StructuredJsonMessageConverter implements HttpMessageConverter<Obje
      */
     @Override
     public Object read(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-        String json = CharStreams.toString(new InputStreamReader(inputMessage.getBody()));
+        String json = new String(inputMessage.getBody().readAllBytes(), UTF_8);
         Object body = delegate.read(clazz, new StringHttpInputMessage(inputMessage.getHeaders(), json));
         Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, delegate.getObjectMapper());
         return new StructuredBody(body, propertyNames);

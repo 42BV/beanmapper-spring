@@ -1,8 +1,7 @@
 [![Build Status](https://github.com/42BV/beanmapper-spring/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/42BV/beanmapper-spring/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e2784c9a7592423390df7888a9dc30e0)](https://www.codacy.com/gh/42BV/beanmapper-spring/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=42BV/beanmapper-spring&amp;utm_campaign=Badge_Grade)
-[![BCH compliance](https://bettercodehub.com/edge/badge/42BV/beanmapper-spring?branch=master)](https://bettercodehub.com/)
 [![codecov](https://codecov.io/gh/42BV/beanmapper-spring/branch/master/graph/badge.svg)](https://codecov.io/gh/42BV/beanmapper-spring)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.beanmapper/beanmapper-spring)
+[![Maven Central](https://img.shields.io/maven-central/v/io.beanmapper/beanmapper-spring.svg?color=green)](https://central.sonatype.com/artifact/io.beanmapper/beanmapper-spring)
 [![Javadocs](https://www.javadoc.io/badge/io.beanmapper/beanmapper-spring.svg)](https://www.javadoc.io/doc/io.beanmapper/beanmapper-spring)
 [![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 

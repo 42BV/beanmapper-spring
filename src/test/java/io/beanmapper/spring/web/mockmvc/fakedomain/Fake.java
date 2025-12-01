@@ -12,7 +12,7 @@ import org.springframework.data.domain.Persistable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Fake implements Persistable {
+public class Fake implements Persistable<Long> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

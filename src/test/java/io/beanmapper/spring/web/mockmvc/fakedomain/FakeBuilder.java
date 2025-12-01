@@ -9,21 +9,18 @@ public class FakeBuilder extends AbstractBuilder<Fake, FakeBuildCommand> {
 
     @Override
     public FakeBuildCommand base() {
-        return blank()
-                .withId(42L);
+        return blank();
     }
 
     public Fake henk() {
         return base()
                 .withName("Henk")
-                .withId(42L)
                 .create();
     }
 
     public Fake piet() {
         return base()
                 .withName("Piet")
-                .withId(43L)
                 .create();
     }
 
