@@ -53,11 +53,10 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.boot.version>3.5.4</spring.boot.version>
+        <spring.boot.version>4.0.0</spring.boot.version>
         <beanmapper.version>6.0.0</beanmapper.version>
         <el.api.version>6.0.1</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
-        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <hsqldb.version>2.7.4</hsqldb.version>
         <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
         <jsonpath.version>2.10.0</jsonpath.version>
@@ -92,6 +91,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -117,12 +121,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -131,6 +135,10 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc-test</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>

@@ -5,7 +5,7 @@ import io.beanmapper.annotations.BeanProperty;
 
 public class ContainingFakeForm {
 
-    @BeanProperty(name = "fake")
+    @BeanProperty("fake")
     public Long fakeId;
 
     @BeanIgnore

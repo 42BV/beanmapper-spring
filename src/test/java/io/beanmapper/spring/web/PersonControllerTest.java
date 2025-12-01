@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-
 import io.beanmapper.BeanMapper;
 import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.ApplicationConfig;
@@ -24,35 +22,30 @@ import io.beanmapper.spring.model.PersonRepository;
 import io.beanmapper.spring.model.Tag;
 import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
 import io.beanmapper.spring.web.mockmvc.AbstractControllerTest;
+import jakarta.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @ExtendWith(MockitoExtension.class)
 public class PersonControllerTest extends AbstractControllerTest {
 
+    private HttpMessageConverter converter = new StructuredJsonMessageConverter(new JacksonJsonHttpMessageConverter());
     private BeanMapper beanMapper;
-
-    private MappingJackson2HttpMessageConverter converter;
-
-    @InjectMocks
-    private ObjectMapper objectMapper;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -65,9 +58,6 @@ public class PersonControllerTest extends AbstractControllerTest {
 
     @BeforeEach
     public void setUp() {
-        converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(objectMapper);
-
         beanMapper = new BeanMapperBuilder()
                 .addPackagePrefix(ApplicationConfig.class)
                 .build();
@@ -78,7 +68,7 @@ public class PersonControllerTest extends AbstractControllerTest {
     private MockMvc createWebClient(BeanMapper beanMapper) {
         return MockMvcBuilders.standaloneSetup(new PersonController())
                 .setCustomArgumentResolvers(new MergedFormMethodArgumentResolver(
-                        List.of(new StructuredJsonMessageConverter(converter)),
+                        List.of(converter),
                         beanMapper,
                         applicationContext,
                         entityManager))

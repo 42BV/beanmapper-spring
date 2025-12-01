@@ -3,7 +3,15 @@
  */
 package io.beanmapper.spring;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import jakarta.persistence.EntityManagerFactory;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -21,13 +29,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
 
 @ComponentScan(
     basePackageClasses = ApplicationConfig.class,
@@ -83,10 +84,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        return mapper;
+    public JsonMapper objectMapper() {
+        return JsonMapper.builder()
+                .build();
     }
 
     @Configuration

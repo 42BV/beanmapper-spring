@@ -9,8 +9,7 @@ import io.beanmapper.spring.web.mockmvc.fakedomain.FakeWebMvcConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.format.support.FormattingConversionService;
@@ -18,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
+@EnableAutoConfiguration
 public class AbstractControllerTest extends AbstractSpringTest {
 
     private FakeWebMvcConfig config = new FakeWebMvcConfig();
@@ -32,14 +31,14 @@ public class AbstractControllerTest extends AbstractSpringTest {
 
         this.mockMvcBeanMapper = new MockMvcBeanMapper(
                 new FormattingConversionService(),
-                Collections.singletonList(config.mappingJackson2HttpMessageConverter()),
+                Collections.singletonList(config.structuredJsonMessageConverter()),
                 new FakeApplicationConfig().beanMapper()
         );
     }
 
     public void createWebClient(Object controller) {
         this.webClient = MockMvcBuilders.standaloneSetup(controller)
-                .setMessageConverters(config.mappingJackson2HttpMessageConverter())
+                .setMessageConverters(config.structuredJsonMessageConverter())
                 .setCustomArgumentResolvers(mockMvcBeanMapper.createHandlerMethodArgumentResolvers())
                 .setConversionService(mockMvcBeanMapper.getConversionService())
                 .build();

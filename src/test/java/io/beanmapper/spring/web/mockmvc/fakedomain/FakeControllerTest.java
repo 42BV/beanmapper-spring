@@ -11,19 +11,18 @@ import io.beanmapper.config.BeanMapperBuilder;
 import io.beanmapper.spring.ApplicationConfig;
 import io.beanmapper.spring.web.mockmvc.AbstractControllerTest;
 import io.beanmapper.spring.web.mockmvc.FakeController;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 class FakeControllerTest extends AbstractControllerTest {
 
@@ -39,17 +38,16 @@ class FakeControllerTest extends AbstractControllerTest {
     @Autowired
     private FakeBuilder fakeBuilder;
 
-    @InjectMocks
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private JsonMapper objectMapper;
 
     private BeanMapper beanMapper;
 
-    private MappingJackson2HttpMessageConverter converter;
+    private JacksonJsonHttpMessageConverter converter;
 
     @BeforeEach
     void setup() {
-        converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(objectMapper);
+        converter = new JacksonJsonHttpMessageConverter(objectMapper);
 
         beanMapper = new BeanMapperBuilder()
                 .addPackagePrefix(ApplicationConfig.class)

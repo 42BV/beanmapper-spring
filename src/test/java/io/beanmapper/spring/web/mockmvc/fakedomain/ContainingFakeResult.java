@@ -4,7 +4,7 @@ import io.beanmapper.annotations.BeanProperty;
 
 public class ContainingFakeResult {
 
-    @BeanProperty(name = "fake.name")
+    @BeanProperty("fake.name")
     public String fakeName;
 
 }

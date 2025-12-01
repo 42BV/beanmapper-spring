@@ -20,10 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 
 /**
- * Wraps the default Jackson2 message converter with read
+ * Wraps the default Jackson message converter with read
  * functionality that returns both the message and property
  * names.
  *
@@ -32,9 +32,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 public class StructuredJsonMessageConverter implements HttpMessageConverter<Object> {
     
-    private final MappingJackson2HttpMessageConverter delegate;
+    private final JacksonJsonHttpMessageConverter delegate;
     
-    public StructuredJsonMessageConverter(MappingJackson2HttpMessageConverter delegate) {
+    public StructuredJsonMessageConverter(JacksonJsonHttpMessageConverter delegate) {
         this.delegate = delegate;
     }
     
@@ -69,7 +69,7 @@ public class StructuredJsonMessageConverter implements HttpMessageConverter<Obje
     public Object read(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
         String json = new String(inputMessage.getBody().readAllBytes(), UTF_8);
         Object body = delegate.read(clazz, new StringHttpInputMessage(inputMessage.getHeaders(), json));
-        Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, delegate.getObjectMapper());
+        Set<String> propertyNames = JsonUtil.getPropertyNamesFromJson(json, delegate.getMapper());
         return new StructuredBody(body, propertyNames);
     }
     

@@ -3,11 +3,15 @@ package io.beanmapper.spring.web.mockmvc.fakedomain;
 import java.util.Collections;
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
 import io.beanmapper.BeanMapper;
 import io.beanmapper.spring.web.MergedFormMethodArgumentResolver;
+import io.beanmapper.spring.web.converter.StructuredJsonMessageConverter;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import tools.jackson.core.Version;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters.ServerBuilder;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -29,10 +33,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
 @EnableWebMvc
 @EnableSpringDataWebSupport
@@ -54,20 +54,18 @@ public class FakeWebMvcConfig implements WebMvcConfigurer {
     private EntityManager entityManager;
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(mappingJackson2HttpMessageConverter());
+    public void configureMessageConverters(ServerBuilder builder) {
+        builder.addCustomConverter(structuredJsonMessageConverter());
     }
 
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(objectMapper());
-        return converter;
+    public StructuredJsonMessageConverter structuredJsonMessageConverter() {
+        return new StructuredJsonMessageConverter(new JacksonJsonHttpMessageConverter(objectMapper()));
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new MergedFormMethodArgumentResolver(
-                Collections.singletonList(mappingJackson2HttpMessageConverter()),
+                Collections.singletonList(structuredJsonMessageConverter()),
                 beanMapper,
                 applicationContext,
                 entityManager
@@ -75,16 +73,12 @@ public class FakeWebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-
-        SimpleModule module = new SimpleModule("BeanMapperSpring", new Version(1, 0, 0, null, "org.beanmapper", "spring"));
-        mapper.registerModule(module);
-
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper;
+    public JsonMapper objectMapper() {
+        return JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .addModule(new SimpleModule("BeanMapperSpring", new Version(1, 0, 0, null, "org.beanmapper", "spring")))
+                .build();
     }
 
     @Bean

@@ -1,12 +1,11 @@
 package io.beanmapper.spring.util;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Utilities for working with JSON.
@@ -27,21 +26,18 @@ public class JsonUtil {
         try {
             JsonNode tree = objectMapper.readTree(json);
             return getPropertyNames(tree, "");
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new IllegalStateException("Could not retrieve property names from JSON.", e);
         }
     }
 
     private static Set<String> getPropertyNames(JsonNode node, String base) {
         Set<String> propertyNames = new HashSet<>();
-        Iterator<String> iterator = node.fieldNames();
-        while (iterator.hasNext()) {
-            String fieldName = iterator.next();
-
+        node.propertyNames().forEach(fieldName -> {
             String propertyName = isEmpty(base) ? fieldName : base + "." + fieldName;
             propertyNames.add(propertyName);
             propertyNames.addAll(getPropertyNames(node.get(fieldName), propertyName));
-        }
+        });
         return propertyNames;
     }
 
