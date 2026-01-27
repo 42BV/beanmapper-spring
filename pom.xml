@@ -54,7 +54,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring.boot.version>4.0.0</spring.boot.version>
-        <beanmapper.version>6.0.1</beanmapper.version>
+        <beanmapper.version>6.0.2</beanmapper.version>
         <el.api.version>6.0.1</el.api.version>
         <el.impl.version>4.0.2</el.impl.version>
         <hsqldb.version>2.7.4</hsqldb.version>
